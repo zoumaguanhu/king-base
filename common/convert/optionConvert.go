@@ -10,6 +10,9 @@ import (
 func Time2DefaultFormatStr() copier.Option {
 	return Time2FormatStr(time.DateTime)
 }
+func Time2DefaultFormatAndId2Str() copier.Option {
+	return Time2FormatStr(time.DateTime)
+}
 func Time2FormatStr(format string) copier.Option {
 	option := copier.Option{
 		IgnoreEmpty: true,

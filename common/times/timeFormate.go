@@ -7,6 +7,7 @@ import (
 )
 
 const DATE_TIME = "2006-01-02 15:04:05"
+const DATE_TIME_JOIN = "20060102150405999999"
 const DATE = "2006-01-02"
 
 func DateTimeFormat(dateTime time.Time, format string) string {
