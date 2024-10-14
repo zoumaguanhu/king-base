@@ -1,6 +1,7 @@
 package constants
 
 const DEFAULT_STR string = ""
+const SEPARATOR_STR string = ";"
 const ZERO_STR string = "0"
 const LETTER_BYTES = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 const TRACE_ID string = "TRACE_ID"

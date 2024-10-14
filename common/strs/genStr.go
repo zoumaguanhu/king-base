@@ -35,7 +35,13 @@ func (rg *RandomGenerator) generateRandomAlphanumeric(length int) string {
 }
 func (rg *RandomGenerator) fillNumFourStr(num int64) string {
 	str := strconv.FormatInt(num, 10)
-	lastFourDigits := str[len(str)-4:]
+	var lastFourDigits string
+	if len(str) < 4 {
+		lastFourDigits = str
+	} else {
+		lastFourDigits = str[len(str)-4:]
+	}
+
 	if len(lastFourDigits) < 4 {
 		padding := constants.DEFAULT_STR
 		for i := 0; i < 4-len(lastFourDigits); i++ {
@@ -56,4 +62,7 @@ func GenOrder(num int64) string {
 		gt.fillNumFourStr(num),
 		gt.generateRandomFourDigits(),
 	)
+}
+func GenDefaultOrder() string {
+	return GenOrder(4)
 }
