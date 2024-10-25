@@ -1,7 +1,5 @@
 package mail
 
-import "crypto/tls"
-
 type MailConf struct {
 	MailSmtp  string
 	MailPort  int64
@@ -19,14 +17,15 @@ type MailTarget struct {
 
 func (l *MailTarget) SendMail(subject, body string, to []string) error {
 
-	m := gomail.NewMessage()
-	m.SetHeader("From", "your_email@example.com")
-	m.SetHeader("To", to...)
-	m.SetHeader("Subject", subject)
-	m.SetBody("text/plain", body)
+	//m := gomail.NewMessage()
+	//m.SetHeader("From", "your_email@example.com")
+	//m.SetHeader("To", to...)
+	//m.SetHeader("Subject", subject)
+	//m.SetBody("text/plain", body)
+	//
+	//d := gomail.NewDialer("smtp.example.com", 587, "your_email@example.com", "your_email_password")
+	//d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
-	d := gomail.NewDialer("smtp.example.com", 587, "your_email@example.com", "your_email_password")
-	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
-
-	return d.DialAndSend(m)
+	//return d.DialAndSend(m)
+	return nil
 }
