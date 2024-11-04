@@ -3,7 +3,6 @@ package strs
 import (
 	"fmt"
 	"king.com/king/base/common/constants"
-	"king.com/king/base/common/times"
 	"math/rand"
 	"strconv"
 	"time"
@@ -57,18 +56,18 @@ func GenStr(l int) string {
 }
 func GenOrder(num int64) string {
 	now := time.Now()
-	str := times.TimeToFormatStr(now.Unix(), times.DATE_TIME_JOIN)
-	return fmt.Sprintf("8%v%04d%04d", str, num%constants.TEN_THOUSAND_64, now.Nanosecond()%constants.TEN_THOUSAND)
+
+	return fmt.Sprintf("8%04d%02d%02d%08d%02d%02d%02d", now.Year(), now.Month(), now.Day(), num%constants.TEN_THOUSAND_64, now.Hour(), now.Minute(), now.Second())
 }
 func GenRefundOrder(num int64) string {
 	now := time.Now()
-	str := times.TimeToFormatStr(now.Unix(), times.DATE_TIME_JOIN)
-	return fmt.Sprintf("7%v%04d%04d", str, num%constants.TEN_THOUSAND_64, now.Nanosecond()%constants.TEN_THOUSAND)
+	return fmt.Sprintf("7%04d%02d%02d%08d%02d%02d%02d", now.Year(), now.Month(), now.Day(), num%constants.TEN_THOUSAND_64, now.Hour(), now.Minute(), now.Second())
+
 }
 func GenPaySerial(num int64) string {
 	now := time.Now()
-	str := times.TimeToFormatStr(now.Unix(), times.DATE_TIME_JOIN)
-	return fmt.Sprintf("9%v%04d%04d", str, num%constants.TEN_THOUSAND_64, now.Nanosecond()%constants.TEN_THOUSAND)
+	return fmt.Sprintf("9%04d%02d%02d%08d%02d%02d%02d", now.Year(), now.Month(), now.Day(), num%constants.TEN_THOUSAND_64, now.Hour(), now.Minute(), now.Second())
+
 }
 func GenDefaultOrder() string {
 	return GenOrder(4)

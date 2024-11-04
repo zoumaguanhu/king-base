@@ -3,6 +3,7 @@ package strs
 import (
 	"fmt"
 	"king.com/king/base/common/constants"
+	"strconv"
 	"strings"
 )
 
@@ -80,4 +81,20 @@ func NotDefault(s string) bool {
 func ConvertUsd2Str(num int64) string {
 	result := float64(num) / 100
 	return fmt.Sprintf("%.2f", result)
+}
+func StrToInt64Slice(s string, sp string) ([]int64, error) {
+	parts := strings.Split(s, sp)
+	result := make([]int64, 0, len(parts))
+	for _, part := range parts {
+		part = strings.TrimSpace(part)
+		if part == "" {
+			continue
+		}
+		num, err := strconv.ParseInt(part, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, num)
+	}
+	return result, nil
 }

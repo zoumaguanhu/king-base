@@ -20,3 +20,9 @@ func PStr2Val(num *int64) int64 {
 	}
 	return constants.ZERO_INT64
 }
+func Val2Ptr(num int64) *int64 {
+	if num == constants.ZERO_INT64 {
+		return nil
+	}
+	return &num
+}
