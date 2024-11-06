@@ -1,5 +1,6 @@
 package constants
 
+const UN_KNOW string = "N/A"
 const DEFAULT_STR string = ""
 const EMPTY_STR string = " "
 const SEPARATOR_STR string = ";"
@@ -23,6 +24,13 @@ const VIRT_FLG string = "virtFlg"
 const TEN_THOUSAND_64 int64 = 10000
 const TEN_THOUSAND int = 10000
 const DELIVERY_FEE string = "delivery_fee"
+
+// 双引号空
+const EMPTY_STRING = ""
+const PAYLOAD = "payload"
+const MD5 = "md5"
+const EXP = "exp"
+const IAT = "iat"
 const (
 	STATUS_1 int64 = 1
 	STATUS_2 int64 = 2

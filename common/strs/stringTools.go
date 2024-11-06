@@ -82,6 +82,15 @@ func ConvertUsd2Str(num int64) string {
 	result := float64(num) / 100
 	return fmt.Sprintf("%.2f", result)
 }
+func ConvertUsd2Float(num int64) float64 {
+	result := float64(num) / 100
+	temp := fmt.Sprintf("%.2f", result)
+	ft, err := strconv.ParseFloat(temp, 64)
+	if err != nil {
+		return 0
+	}
+	return ft
+}
 func StrToInt64Slice(s string, sp string) ([]int64, error) {
 	parts := strings.Split(s, sp)
 	result := make([]int64, 0, len(parts))
