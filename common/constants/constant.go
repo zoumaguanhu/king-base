@@ -24,6 +24,8 @@ const VIRT_FLG string = "virtFlg"
 const TEN_THOUSAND_64 int64 = 10000
 const TEN_THOUSAND int = 10000
 const DELIVERY_FEE string = "delivery_fee"
+const VISIBLE_1 int64 = 1
+const VISIBLE_2 int64 = 2
 
 // 双引号空
 const EMPTY_STRING = ""
