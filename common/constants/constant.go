@@ -6,6 +6,7 @@ const EMPTY_STR string = " "
 const SEPARATOR_STR string = ";"
 const SEP_STR string = ","
 const BEARER string = "Bearer"
+const AUTHORIZATION string = "Authorization"
 const ZERO_STR string = "0"
 const ZERO_INT64 int64 = 0
 const TEN_INT64 int64 = 10

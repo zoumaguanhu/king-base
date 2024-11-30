@@ -9,3 +9,7 @@ const (
 
 	ORDER_STATUS string = "order_status"
 )
+
+var (
+	VISIBLE_STATUS = [...]int64{1, 2, 3, 4, 6, 7, 8, 9}
+)
