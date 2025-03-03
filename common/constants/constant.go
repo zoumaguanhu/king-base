@@ -9,6 +9,7 @@ const BEARER string = "Bearer"
 const AUTHORIZATION string = "Authorization"
 const ZERO_STR string = "0"
 const ZERO_INT64 int64 = 0
+const ONE_INT64 int64 = 1
 const TEN_INT64 int64 = 10
 const TEN_INT int = 10
 const NUM_120_INT int = 120
@@ -27,6 +28,10 @@ const TEN_THOUSAND int = 10000
 const DELIVERY_FEE string = "delivery_fee"
 const VISIBLE_1 int64 = 1
 const VISIBLE_2 int64 = 2
+const PER_CENT string = "%"
+const (
+	FIELD_VIRT_ID = "virt_id"
+)
 
 // 双引号空
 const EMPTY_STRING = ""
@@ -65,6 +70,7 @@ const (
 	PAYPAL_REQUEST_ID          string = "PayPal-Request-Id"
 	REF_PAYER_ACTION           string = "payer-action"
 	USD                        string = "USD"
+	DOLLAR                     string = "$"
 	EN_US                      string = "en-US"
 	IMMEDIATE_PAYMENT_REQUIRED string = "IMMEDIATE_PAYMENT_REQUIRED"
 	LANDING_PAGE               string = "LOGIN"
@@ -82,4 +88,7 @@ const (
 	P_TYPE_2 int64 = 2
 	P_TYPE_3 int64 = 3
 	P_TYPE_4 int64 = 4
+)
+const (
+	ROLE_0 string = "0"
 )

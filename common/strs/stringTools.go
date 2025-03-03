@@ -107,3 +107,12 @@ func StrToInt64Slice(s string, sp string) ([]int64, error) {
 	}
 	return result, nil
 }
+func StrsToInt64s(ss string) *[]int64 {
+	arr := strings.Split(ss, constants.SEP_STR)
+	r := &[]int64{}
+	for _, id := range arr {
+		d, _ := strconv.ParseInt(id, 10, 64)
+		*r = append(*r, d)
+	}
+	return r
+}

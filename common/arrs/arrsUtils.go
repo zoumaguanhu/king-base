@@ -6,15 +6,21 @@ func IsDefault[T any](a []T) bool {
 func IsNotDefault[T any](a []T) bool {
 	return !IsDefault(a)
 }
-func PtrIsNotNull[T any](a *[]T) bool {
+func IsArrNotNull[T any](a []*T) bool {
+	return !IsArrNull(a)
+}
+func IsArrNull[T any](a []*T) bool {
+	return len(a) <= 0
+}
+func PtrArrIsNotNull[T any](a *[]T) bool {
 	return a != nil || IsNotDefault(*a)
 }
-func PtrIsPtrNotNull[T any](a *[]*T) bool {
+func PtrArrIsPtrNotNull[T any](a *[]*T) bool {
 	return a != nil || len(*a) > 0
 }
-func PtrIsNull[T any](a *[]T) bool {
+func PtrArrIsNull[T any](a *[]T) bool {
 	return a == nil || IsDefault(*a)
 }
-func PtrIsPtrNull[T any](a *[]*T) bool {
+func PtrArrIsPtrNull[T any](a *[]*T) bool {
 	return a == nil || len(*a) <= 0
 }
