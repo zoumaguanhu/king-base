@@ -2,6 +2,7 @@ package strs
 
 import (
 	"fmt"
+	"king.com/king/base/common/arrs"
 	"king.com/king/base/common/constants"
 	"strconv"
 	"strings"
@@ -115,4 +116,17 @@ func StrsToInt64s(ss string) *[]int64 {
 		*r = append(*r, d)
 	}
 	return r
+}
+func StrsToInt64(s string) int64 {
+	if IsDefault(s) {
+		return constants.ZERO_INT64
+	}
+	d, _ := strconv.ParseInt(s, 10, 64)
+	return d
+}
+func StrsToStr(ss []string) string {
+	if arrs.IsDefault(ss) {
+		return constants.DEFAULT_STR
+	}
+	return strings.Join(ss, constants.SEP_STR)
 }
