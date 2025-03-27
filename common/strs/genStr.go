@@ -57,16 +57,16 @@ func GenStr(l int) string {
 func GenOrder(num int64) string {
 	now := time.Now()
 
-	return fmt.Sprintf("8%04d%02d%02d%08d%02d%02d%02d", now.Year(), now.Month(), now.Day(), num%constants.TEN_THOUSAND_64, now.Hour(), now.Minute(), now.Second())
+	return fmt.Sprintf("8%04d%02d%02d%04d%02d%02d%02d", now.Year(), now.Month(), now.Day(), num%constants.TEN_THOUSAND_64, now.Hour(), now.Minute(), now.Second())
 }
 func GenRefundOrder(num int64) string {
 	now := time.Now()
-	return fmt.Sprintf("7%04d%02d%02d%08d%02d%02d%02d", now.Year(), now.Month(), now.Day(), num%constants.TEN_THOUSAND_64, now.Hour(), now.Minute(), now.Second())
+	return fmt.Sprintf("7%04d%02d%02d%04d%02d%02d%02d", now.Year(), now.Month(), now.Day(), num%constants.TEN_THOUSAND_64, now.Hour(), now.Minute(), now.Second())
 
 }
 func GenPaySerial(num int64) string {
 	now := time.Now()
-	return fmt.Sprintf("9%04d%02d%02d%08d%02d%02d%02d", now.Year(), now.Month(), now.Day(), num%constants.TEN_THOUSAND_64, now.Hour(), now.Minute(), now.Second())
+	return fmt.Sprintf("9%04d%02d%02d%04d%02d%02d%02d", now.Year(), now.Month(), now.Day(), num%constants.TEN_THOUSAND_64, now.Hour(), now.Minute(), now.Second())
 
 }
 func GenDefaultOrder() string {

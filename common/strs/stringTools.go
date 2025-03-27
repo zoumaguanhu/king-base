@@ -130,3 +130,13 @@ func StrsToStr(ss []string) string {
 	}
 	return strings.Join(ss, constants.SEP_STR)
 }
+func StrsSplitToArr(s string, split string) *[]string {
+	if IsDefault(s) {
+		return &[]string{}
+	}
+	ss := strings.Split(s, split)
+	return &ss
+}
+func StrsDefultSplitToArr(s string) *[]string {
+	return StrsSplitToArr(s, constants.SEP_STR)
+}

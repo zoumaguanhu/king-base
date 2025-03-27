@@ -29,6 +29,8 @@ const DELIVERY_FEE string = "delivery_fee"
 const VISIBLE_1 int64 = 1
 const VISIBLE_2 int64 = 2
 const PER_CENT string = "%"
+const DLX_PREFIX string = "dlx_"
+const DIRECT string = "direct"
 const (
 	FIELD_VIRT_ID = "virt_id"
 )
