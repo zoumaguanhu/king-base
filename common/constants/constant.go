@@ -31,6 +31,7 @@ const VISIBLE_2 int64 = 2
 const PER_CENT string = "%"
 const DLX_PREFIX string = "dlx_"
 const DIRECT string = "direct"
+const SHORT_LINE = "_"
 const (
 	FIELD_VIRT_ID = "virt_id"
 )
@@ -92,5 +93,8 @@ const (
 	P_TYPE_4 int64 = 4
 )
 const (
-	ROLE_0 string = "0"
+	ROLE_0 int64 = 0
+	ROLE_1 int64 = 1
+	ROLE_2 int64 = 2
+	ROLE_3 int64 = 3
 )

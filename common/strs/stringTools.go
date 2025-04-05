@@ -140,3 +140,23 @@ func StrsSplitToArr(s string, split string) *[]string {
 func StrsDefultSplitToArr(s string) *[]string {
 	return StrsSplitToArr(s, constants.SEP_STR)
 }
+func GenPids(pIds string, id int64) string {
+	return pIds + constants.SHORT_LINE + strconv.FormatInt(id, 10)
+}
+func ParsePids(pIds string) *[]int64 {
+	return splitToInt64Array(pIds, constants.SHORT_LINE)
+}
+func splitToInt64Array(input string, splitFlg string) *[]int64 {
+	// 按 "_" 分割字符串
+	parts := strings.Split(input, splitFlg)
+	numbers := &[]int64{}
+	for _, part := range parts {
+		// 将每个部分转换为 int64
+		num, err := strconv.ParseInt(part, 10, 64)
+		if err != nil {
+			return numbers
+		}
+		*numbers = append(*numbers, num)
+	}
+	return numbers
+}

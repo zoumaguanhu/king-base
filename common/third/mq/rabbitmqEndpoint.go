@@ -119,10 +119,17 @@ func NewRabbitMQEndpoint(mq *RabbitMQ) (*RabbitMQEndpoint, error) {
 	}, nil
 }
 func (s RabbitMQEndpoint) StartConsumer() {
-	for _, f := range *s.consumerList {
-		//启动消费者
-		f()
-	}
+	go func() {
+		defer func() {
+			if r := recover(); r != nil {
+				logx.Errorf("StartConsumer err:%v", r)
+			}
+		}()
+		for _, f := range *s.consumerList {
+			//启动消费者
+			f()
+		}
+	}()
 }
 func (s *RabbitMQEndpoint) ConsumeMessages(queueName string, handler func(d amqp.Delivery) error) error {
 	if !s.IsConnected() {
@@ -348,15 +355,14 @@ func (s *RabbitMQEndpoint) MonitorConnection() {
 					for {
 						endpoint, err := NewRabbitMQEndpoint(s.config)
 						if err == nil {
+							log.Println("Reconnected to RabbitMQ successfully.")
 							s.conn = endpoint.conn
 							s.channel = endpoint.channel
 							s.queues = endpoint.queues
-							log.Println("Reconnected to RabbitMQ successfully.")
 							notifyClose = make(chan *amqp.Error)
 							s.conn.NotifyClose(notifyClose)
 							//重新开始消费
 							s.StartConsumer()
-
 							break
 						}
 
