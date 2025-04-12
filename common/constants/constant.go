@@ -22,6 +22,7 @@ const USER_ID string = "userID"
 const ROLE string = "role"
 const VIRT_ID string = "virtId"
 const VIRT_IDS string = "virtIds"
+const SITE_ROLE string = "sr"
 const VIRT_FLG string = "virtFlg"
 const TEN_THOUSAND_64 int64 = 10000
 const TEN_THOUSAND int = 10000

@@ -5,6 +5,7 @@ import (
 	"king.com/king/base/common/constants"
 	"math/rand"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -53,6 +54,13 @@ func (rg *RandomGenerator) fillNumFourStr(num int64) string {
 }
 func GenStr(l int) string {
 	return gt.generateRandomAlphanumeric(l)
+}
+func GenSnStr() string {
+	return gt.generateRandomAlphanumeric(32)
+}
+func GenAcCodeStr() string {
+	s := gt.generateRandomAlphanumeric(12)
+	return strings.ToUpper(s)
 }
 func GenOrder(num int64) string {
 	now := time.Now()

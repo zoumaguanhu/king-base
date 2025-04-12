@@ -52,6 +52,9 @@ func StrToTime(dateStr string, format string) (time.Time, error) {
 	}
 	return parsedTime, nil
 }
+func DateTimeToStartTime(t *time.Time) time.Time {
+	return time.Date(t.Year(), t.Month(), t.Day(), 00, 00, 00, 0, t.Location())
+}
 func DateTimeToEndTime(t *time.Time) time.Time {
 	return time.Date(t.Year(), t.Month(), t.Day(), 23, 59, 59, 0, t.Location())
 }
@@ -61,4 +64,16 @@ func DateStrToEndTime(dateStr string) (time.Time, error) {
 		return time.Now(), err
 	}
 	return DateTimeToEndTime(&toTime), nil
+}
+func DateStrToStartTime(dateStr string) (time.Time, error) {
+	toTime, err := StrToTime(dateStr, DATE)
+	if err != nil {
+		return time.Now(), err
+	}
+	return DateTimeToStartTime(&toTime), nil
+}
+func DateToFutureDate(d int64) *time.Time {
+	n := time.Now()
+	f := n.AddDate(0, 0, int(d))
+	return &f
 }

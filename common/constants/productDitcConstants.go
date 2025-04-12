@@ -10,4 +10,5 @@ const (
 	PRODUCT_COUNTRY string = "product_country"
 	PAY_METHOD      string = "pay_method"
 	PRODUCT_SYS     string = "sys"
+	ACTIVE_ITEM     string = "active_item"
 )
