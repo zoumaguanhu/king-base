@@ -62,6 +62,10 @@ func GenAcCodeStr() string {
 	s := gt.generateRandomAlphanumeric(12)
 	return strings.ToUpper(s)
 }
+func GenPromoteCodeStr() string {
+	s := gt.generateRandomAlphanumeric(8)
+	return strings.ToUpper(s)
+}
 func GenOrder(num int64) string {
 	now := time.Now()
 
