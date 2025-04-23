@@ -2,9 +2,11 @@ package rdb
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/zeromicro/go-zero/core/logc"
+	"king.com/king/base/common/constants"
 	"time"
 )
 
@@ -44,7 +46,7 @@ func New(cnf *RdsCnf) *RedisClient {
 func (rds *RedisClient) Set(key, value string) bool {
 	result, err := rds.client.Set(rds.ctx, key, value, 0).Result()
 	if err != nil {
-		logc.Errorf(rds.ctx, "redis err:%v", err)
+		logc.Errorf(rds.ctx, "redis key:%v err:%v", key, err)
 		return false
 	}
 	return result == "OK"
@@ -54,7 +56,7 @@ func (rds *RedisClient) Set(key, value string) bool {
 func (rds *RedisClient) SetEX(key, value string, ex time.Duration) bool {
 	result, err := rds.client.Set(rds.ctx, key, value, ex).Result()
 	if err != nil {
-		logc.Errorf(rds.ctx, "redis err:%v", err)
+		logc.Errorf(rds.ctx, "redis key:%v err:%v", key, err)
 		return false
 	}
 	return result == "OK"
@@ -64,8 +66,8 @@ func (rds *RedisClient) SetEX(key, value string, ex time.Duration) bool {
 func (rds *RedisClient) Get(key string) (bool, string) {
 	result, err := rds.client.Get(rds.ctx, key).Result()
 	if err != nil {
-		logc.Errorf(rds.ctx, "redis err:%v", err)
-		return false, ""
+		logc.Errorf(rds.ctx, "redis get key:%v err:%v", key, err)
+		return false, constants.DEFAULT_STR
 	}
 	return true, result
 }
@@ -75,7 +77,7 @@ func (rds *RedisClient) GetSet(key, value string) (bool, string) {
 	oldValue, err := rds.client.GetSet(rds.ctx, key, value).Result()
 	if err != nil {
 		logc.Errorf(rds.ctx, "redis err:%v", err)
-		return false, ""
+		return false, constants.DEFAULT_STR
 	}
 	return true, oldValue
 }
@@ -168,7 +170,7 @@ func (rds *RedisClient) LPop(key string) (bool, string) {
 	val, err := rds.client.LPop(rds.ctx, key).Result()
 	if err != nil {
 		logc.Errorf(rds.ctx, "redis err:%v", err)
-		return false, ""
+		return false, constants.DEFAULT_STR
 	}
 	return true, val
 }
@@ -178,7 +180,7 @@ func (rds *RedisClient) RPop(key string) (bool, string) {
 	val, err := rds.client.RPop(rds.ctx, key).Result()
 	if err != nil {
 		fmt.Println(err)
-		return false, ""
+		return false, constants.DEFAULT_STR
 	}
 	return true, val
 }
@@ -188,7 +190,7 @@ func (rds *RedisClient) LIndex(key string, index int64) (bool, string) {
 	val, err := rds.client.LIndex(rds.ctx, key, index).Result()
 	if err != nil {
 		logc.Errorf(rds.ctx, "redis err:%v", err)
-		return false, ""
+		return false, constants.DEFAULT_STR
 	}
 	return true, val
 }
@@ -382,4 +384,11 @@ func (rds *RedisClient) HExists(key, field string) bool {
 		return false
 	}
 	return result
+}
+func (rds *RedisClient) ParseObj(data *string, v interface{}) error {
+	if err := json.Unmarshal([]byte(*data), v); err != nil {
+		logc.Errorf(rds.ctx, "ParseObj err:%v, data:%v", err, *data)
+		return err
+	}
+	return nil
 }

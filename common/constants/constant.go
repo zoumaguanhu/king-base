@@ -36,6 +36,7 @@ const SHORT_LINE = "_"
 const (
 	FIELD_VIRT_ID = "virt_id"
 )
+const RD_SEPARATOR = ":"
 
 // 双引号空
 const EMPTY_STRING = ""
