@@ -77,7 +77,7 @@ func (m *RedisManger) WithExp(t *time.Duration) *RedisManger {
 }
 
 func (m *RedisManger) MustBuild() *RedisManger {
-	if m.validMode() {
+	if !m.validMode() {
 		return m
 	}
 	if err := copier.CopyWithOption(m.tp, m.s, convert.Time2DefaultFormatStr()); err != nil {
@@ -145,8 +145,7 @@ func (m *RedisManger) validMode() bool {
 	return true
 }
 func (m *RedisManger) valid() bool {
-	if m.tp == nil {
-		logx.Errorf("not invoke Mode fun")
+	if !m.validMode() {
 		return false
 	}
 	if !m.build {
