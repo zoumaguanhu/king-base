@@ -14,8 +14,8 @@ type RdbBaseImpl struct {
 	R *RedisClient
 }
 
-func (r *RdbBaseImpl) BuildSiteKey(virtId int64, bz string) *string {
-	s := fmt.Sprintf("site:%v:bz:%v", virtId, bz)
+func (r *RdbBaseImpl) BuildSiteKey(host, bz string) *string {
+	s := fmt.Sprintf("site:bz:%v:%v", bz, host)
 	return &s
 }
 func (r *RdbBaseImpl) BuildUserKey(virtId int64, userId int64, bz string) *string {
@@ -44,7 +44,8 @@ type RedisManger struct {
 	s     interface{}    //源数据
 	tp    interface{}    //mode类型
 	k     *string        //key
-	v     *[]byte        // value
+	f     *string        //field
+	v     *string        // value
 	t     *time.Duration //超时
 	build bool           //构建完成后放可执行
 }
@@ -63,12 +64,16 @@ func (m *RedisManger) Mode(tp interface{}) *RedisManger {
 	m.tp = tp
 	return m
 }
-func (m *RedisManger) WithSiteKey(virtId int64, bz string) *RedisManger {
-	m.k = m.BuildSiteKey(virtId, bz)
+func (m *RedisManger) WithSiteKey(host, bz string) *RedisManger {
+	m.k = m.BuildSiteKey(host, bz)
 	return m
 }
 func (m *RedisManger) WithUserKey(virtId int64, userId int64, bz string) *RedisManger {
 	m.k = m.BuildUserKey(virtId, userId, bz)
+	return m
+}
+func (m *RedisManger) WithField(f *string) *RedisManger {
+	m.f = f
 	return m
 }
 func (m *RedisManger) WithExp(t *time.Duration) *RedisManger {
@@ -89,13 +94,46 @@ func (m *RedisManger) MustBuild() *RedisManger {
 		logx.Errorf("MustBuild marshal err:%v,tp:%+v", err, m.tp)
 		return m
 	}
-	m.v = &ms
+	i := string(ms)
+	m.v = &i
 	m.build = true
 	return m
 }
 
-// 执行设置
-func (m *RedisManger) SResult() bool {
+func (m *RedisManger) QMustBuild() *RedisManger {
+	if !m.validMode() {
+		return m
+	}
+	m.build = true
+	return m
+}
+
+// 执行set
+func (m *RedisManger) SetResult() bool {
+	if !m.valid() {
+		return false
+	}
+	if strs.IsEmpty(m.k) {
+		return false
+	}
+	m.build = false
+	if m.t != nil {
+		return m.setEx()
+	}
+	return m.dfSet()
+}
+
+// 执行hset
+func (m *RedisManger) HSetResult() bool {
+	if !m.hValid() {
+		return false
+	}
+
+	r := m.dfHSet()
+	m.build = false
+	return r
+}
+func (m *RedisManger) HMSetResult() bool {
 	if !m.valid() {
 		return false
 	}
@@ -111,7 +149,7 @@ func (m *RedisManger) SResult() bool {
 }
 
 // 执行查询
-func (m *RedisManger) QResult() interface{} {
+func (m *RedisManger) QueryResult() interface{} {
 	if !m.valid() {
 		return false
 	}
@@ -119,38 +157,29 @@ func (m *RedisManger) QResult() interface{} {
 	if !b {
 		return nil
 	}
-	v := []byte(s)
-	m.v = &v
-	return m
+	m.v = &s
+	json.Unmarshal([]byte(s), m.tp)
+	return m.tp
+}
+func (m *RedisManger) HQueryResult() interface{} {
+	if !m.valid() {
+		return false
+	}
+	s := m.R.HGet(*m.k, *m.f)
+	if strs.IsDefault(s) {
+		return m.tp
+	}
+	m.v = &s
+	if err := json.Unmarshal([]byte(*m.v), m.tp); err != nil {
+		return nil
+	}
+	return m.tp
 }
 
 // 执行删除
-func (m *RedisManger) DResult() bool {
+func (m *RedisManger) DelResult() bool {
 	if strs.IsEmpty(m.k) {
 		return false
 	}
 	return m.R.Del(*m.k)
-}
-func (m *RedisManger) dfSet() bool {
-	return m.R.Set(*m.k, string(*m.v))
-}
-func (m *RedisManger) setEx() bool {
-	return m.R.SetEX(*m.k, string(*m.v), *m.t)
-}
-func (m *RedisManger) validMode() bool {
-	if m.tp == nil {
-		logx.Errorf("not invoke Mode fun")
-		return false
-	}
-	return true
-}
-func (m *RedisManger) valid() bool {
-	if !m.validMode() {
-		return false
-	}
-	if !m.build {
-		logx.Errorf("not invoke MustBuild fun")
-		return false
-	}
-	return true
 }

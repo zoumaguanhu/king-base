@@ -1,5 +1,9 @@
 package rdb
 
+const (
+	SITE = "v_site_list"
+)
+
 // product缓存bz关键字
 const (
 	REVIEW_PAGE = "review_page"

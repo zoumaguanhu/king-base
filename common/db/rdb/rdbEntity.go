@@ -1,6 +1,7 @@
 package rdb
 
 // 用户缓存信息结构体
+
 type UserInfo struct {
 	Id        int64  `json:"id"`
 	EMail     string `json:"EMail"`
@@ -11,4 +12,17 @@ type UserInfo struct {
 	Source    string `json:"source"`
 	VirtId    int64  `json:"virtId"`
 	BuildTime string `json:"buildTime"`
+}
+type SiteInfo struct {
+	Id           int64  `json:"id"`
+	Name         string `json:"name"`
+	SiteUrl      string `json:"siteUrl"`
+	SiteLogo     string `json:"siteLogo"`
+	SiteMeta     string `json:"siteMeta"`
+	Status       int64  `json:"status"`
+	Zone         int64  `json:"zone"`
+	SiteTemplate int64  `json:"siteTemplate"`
+	ExpTime      string `json:"expTime"`
+	Lang         int64  `json:"lang"`
+	BuildTime    string `json:"buildTime"`
 }

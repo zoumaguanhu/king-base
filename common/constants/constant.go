@@ -34,7 +34,8 @@ const DLX_PREFIX string = "dlx_"
 const DIRECT string = "direct"
 const SHORT_LINE = "_"
 const (
-	FIELD_VIRT_ID = "virt_id"
+	FIELD_VIRT_ID  = "virt_id"
+	NOT_FOUNT_SITE = "not found site"
 )
 const RD_SEPARATOR = ":"
 

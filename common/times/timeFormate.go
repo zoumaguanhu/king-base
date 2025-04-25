@@ -45,7 +45,7 @@ func StrToDefaultTime(dateStr string) (time.Time, error) {
 	return StrToTime(dateStr, DATE_TIME)
 }
 func StrToTime(dateStr string, format string) (time.Time, error) {
-	parsedTime, err := time.Parse(format, dateStr)
+	parsedTime, err := time.ParseInLocation(format, dateStr, time.Local)
 	if err != nil {
 		fmt.Println("Error parsing date:", err)
 		return time.Time{}, err
@@ -76,4 +76,13 @@ func DateToFutureDate(d int64) *time.Time {
 	n := time.Now()
 	f := n.AddDate(0, 0, int(d))
 	return &f
+}
+func ExpDurationTime(expTime string, t time.Duration) *time.Duration {
+	endTime, err := StrToDefaultTime(expTime)
+	if err != nil {
+		return nil
+	}
+	d := endTime.Unix() - time.Now().Unix()
+	v := time.Duration(d) * t
+	return &v
 }
