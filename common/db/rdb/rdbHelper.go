@@ -3,6 +3,7 @@ package rdb
 import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"king.com/king/base/common/strs"
+	"time"
 )
 
 func (m *RedisManger) dfSet() bool {
@@ -73,4 +74,39 @@ func (m *RedisManger) hValid() bool {
 		return false
 	}
 	return true
+}
+func (m *RedisManger) scriptValid() bool {
+	if !m.validKey() {
+		return false
+	}
+	if !m.validField() {
+		return false
+	}
+
+	return true
+}
+func (m *RedisManger) incrScript() *string {
+	script := `
+		local key = KEYS[1]
+		local field = ARGV[1]
+		local increment = tonumber(ARGV[2])
+		local ttl = tonumber(ARGV[3])
+		
+		-- 如果字段不存在，先初始化为0
+		if redis.call("HEXISTS", key, field) == 0 then
+			redis.call("HSET", key, field, 0)
+			redis.call("EXPIRE", key, ttl)
+		end
+		
+		-- 执行自增并返回新值
+		return redis.call("HINCRBY", key, field, increment)
+	`
+	return &script
+}
+
+func (m *RedisManger) formatSec(dur time.Duration) int64 {
+	if dur > 0 && dur < time.Second {
+		return 1
+	}
+	return int64(dur / time.Second)
 }

@@ -2,6 +2,7 @@ package constants
 
 const UN_KNOW string = "N/A"
 const DEFAULT_STR string = ""
+const HTTPS_PREFIX string = "https"
 const EMPTY_STR string = " "
 const SEPARATOR_STR string = ";"
 const SEP_STR string = ","

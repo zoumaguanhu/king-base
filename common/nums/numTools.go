@@ -1,6 +1,9 @@
 package nums
 
-import "king.com/king/base/common/constants"
+import (
+	"king.com/king/base/common/constants"
+	"strconv"
+)
 
 func IsDefault(num int64) bool {
 	return num == 0
@@ -46,4 +49,7 @@ func Difference(A, B *[]int64) *[]int64 {
 		}
 	}
 	return &result
+}
+func Int64ToStr(num int64) string {
+	return strconv.FormatInt(num, 10)
 }

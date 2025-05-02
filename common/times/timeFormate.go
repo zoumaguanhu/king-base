@@ -22,8 +22,17 @@ func DateDefaultFormat(date time.Time) string {
 	}
 	return DateTimeFormat(date, DATE_TIME)
 }
+func DateFormat(date time.Time) string {
+	if date.IsZero() {
+		return constants.EMPTY_STRING
+	}
+	return DateTimeFormat(date, DATE)
+}
 func TimeToDateTime(t int64) string {
 	return TimeToFormatStr(t, constants.DATE_TIME_FORMAT)
+}
+func TimeToDate(t int64) string {
+	return TimeToFormatStr(t, constants.DATE_FORMAT)
 }
 
 // TimeToFormatStr 指定时间格式
@@ -39,6 +48,9 @@ func TimeToUnix(t int64) time.Time {
 // CurrentDateTime 当前时间
 func CurrentDateTime() string {
 	return TimeToDateTime(time.Now().Unix())
+}
+func CurrentDate() string {
+	return TimeToDate(time.Now().Unix())
 }
 
 func StrToDefaultTime(dateStr string) (time.Time, error) {

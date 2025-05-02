@@ -26,3 +26,6 @@ type SiteInfo struct {
 	Lang         int64  `json:"lang"`
 	BuildTime    string `json:"buildTime"`
 }
+type SiteStat struct {
+	Count int64 `json:"count"`
+}

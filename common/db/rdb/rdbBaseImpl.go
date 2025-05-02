@@ -1,6 +1,7 @@
 package rdb
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/jinzhu/copier"
@@ -14,12 +15,20 @@ type RdbBaseImpl struct {
 	R *RedisClient
 }
 
-func (r *RdbBaseImpl) BuildSiteKey(host, bz string) *string {
-	s := fmt.Sprintf("site:bz:%v:%v", bz, host)
+func (r *RdbBaseImpl) BuildKey(key, bz string) *string {
+	s := fmt.Sprintf("site:%v:%v", key, bz)
+	return &s
+}
+func (r *RdbBaseImpl) BuildHostKey(host, bz string) *string {
+	s := fmt.Sprintf("site:vhost:%v:%v", host, bz)
+	return &s
+}
+func (r *RdbBaseImpl) BuildSiteKey(virtId int64, bz string) *string {
+	s := fmt.Sprintf("site:vsite:%v:%v", virtId, bz)
 	return &s
 }
 func (r *RdbBaseImpl) BuildUserKey(virtId int64, userId int64, bz string) *string {
-	s := fmt.Sprintf("site:%v:userId:%v:bz:%v", virtId, userId, bz)
+	s := fmt.Sprintf("site:virtId:%v:userId:%v:%v", virtId, userId, bz)
 	return &s
 }
 func (r *RdbBaseImpl) BuildCache(k string, v interface{}) {
@@ -64,8 +73,16 @@ func (m *RedisManger) Mode(tp interface{}) *RedisManger {
 	m.tp = tp
 	return m
 }
-func (m *RedisManger) WithSiteKey(host, bz string) *RedisManger {
-	m.k = m.BuildSiteKey(host, bz)
+func (m *RedisManger) WithKey(key, bz string) *RedisManger {
+	m.k = m.BuildKey(key, bz)
+	return m
+}
+func (m *RedisManger) WithSiteKey(virtId int64, bz string) *RedisManger {
+	m.k = m.BuildSiteKey(virtId, bz)
+	return m
+}
+func (m *RedisManger) WithHostKey(host, bz string) *RedisManger {
+	m.k = m.BuildHostKey(host, bz)
 	return m
 }
 func (m *RedisManger) WithUserKey(virtId int64, userId int64, bz string) *RedisManger {
@@ -122,6 +139,12 @@ func (m *RedisManger) SetResult() bool {
 	}
 	return m.dfSet()
 }
+func (m *RedisManger) IncrResult() bool {
+	if !m.validKey() {
+		return false
+	}
+	return m.R.Incr(*m.k) > 0
+}
 
 // 执行hset
 func (m *RedisManger) HSetResult() bool {
@@ -175,6 +198,21 @@ func (m *RedisManger) HQueryResult() interface{} {
 	}
 	return m.tp
 }
+func (m *RedisManger) HQueryResultVal() interface{} {
+	if !m.validKey() {
+		return false
+	}
+	if !m.validField() {
+		return false
+	}
+	s := m.R.HGet(*m.k, *m.f)
+	if strs.IsDefault(s) {
+		return m.tp
+	}
+	m.v = &s
+
+	return m.v
+}
 
 // 执行删除
 func (m *RedisManger) DelResult() bool {
@@ -182,4 +220,21 @@ func (m *RedisManger) DelResult() bool {
 		return false
 	}
 	return m.R.Del(*m.k)
+}
+
+func (m *RedisManger) RunScriptResult(script string) interface{} {
+	r := m.R.client.Eval(context.Background(), script, []string{*m.k}, *m.f, *m.v).Val()
+	return r
+}
+func (m *RedisManger) StatScriptExpResult() bool {
+	if !m.scriptValid() {
+		return false
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.incrScript(), []string{*m.k}, *m.f, 1, m.formatSec(*m.t)).Int()
+	if err != nil {
+		logx.Errorf("StatIncr key:%v,field:%v, err:%v", *m.k, *m.f, err)
+		return false
+	}
+	logx.Infof("StatScriptExpResult info:%v", v)
+	return true
 }

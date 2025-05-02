@@ -160,3 +160,12 @@ func splitToInt64Array(input string, splitFlg string) *[]int64 {
 	}
 	return numbers
 }
+func ParseSiteUrl(url string) *[]string {
+	ss := &[]string{}
+	arr := StringToArray(url)
+	for _, h := range arr {
+		cleaned := strings.TrimPrefix(h, constants.HTTPS_PREFIX)
+		*ss = append(*ss, cleaned)
+	}
+	return ss
+}

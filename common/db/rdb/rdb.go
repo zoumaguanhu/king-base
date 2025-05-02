@@ -86,7 +86,7 @@ func (rds *RedisClient) GetSet(key, value string) (bool, string) {
 func (rds *RedisClient) Incr(key string) int64 {
 	val, err := rds.client.Incr(rds.ctx, key).Result()
 	if err != nil {
-		logc.Errorf(rds.ctx, "redis err:%v", err)
+		logc.Errorf(rds.ctx, "redis incr key:%v, err:%v", key, err)
 	}
 	return val
 }
