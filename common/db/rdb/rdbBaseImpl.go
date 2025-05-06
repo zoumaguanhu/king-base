@@ -15,21 +15,25 @@ type RdbBaseImpl struct {
 	R *RedisClient
 }
 
-func (r *RdbBaseImpl) BuildKey(key, bz string) *string {
+func (r *RdbBaseImpl) BuildKey(key, bz string) string {
 	s := fmt.Sprintf("site:%v:%v", key, bz)
-	return &s
+	return s
 }
-func (r *RdbBaseImpl) BuildHostKey(host, bz string) *string {
+func (r *RdbBaseImpl) BuildHostKey(host, bz string) string {
 	s := fmt.Sprintf("site:vhost:%v:%v", host, bz)
-	return &s
+	return s
 }
-func (r *RdbBaseImpl) BuildSiteKey(virtId int64, bz string) *string {
+func (r *RdbBaseImpl) BuildHostKeyWithDate(host, date, bz string) string {
+	s := fmt.Sprintf("site:vhost:%v:%v:%v", host, date, bz)
+	return s
+}
+func (r *RdbBaseImpl) BuildSiteKey(virtId int64, bz string) string {
 	s := fmt.Sprintf("site:vsite:%v:%v", virtId, bz)
-	return &s
+	return s
 }
-func (r *RdbBaseImpl) BuildUserKey(virtId int64, userId int64, bz string) *string {
+func (r *RdbBaseImpl) BuildUserKey(virtId int64, userId int64, bz string) string {
 	s := fmt.Sprintf("site:virtId:%v:userId:%v:%v", virtId, userId, bz)
-	return &s
+	return s
 }
 func (r *RdbBaseImpl) BuildCache(k string, v interface{}) {
 	m, err := json.Marshal(v)
@@ -52,8 +56,8 @@ type RedisManger struct {
 	RdbBaseImpl
 	s     interface{}    //源数据
 	tp    interface{}    //mode类型
-	k     *string        //key
-	f     *string        //field
+	k     string         //key
+	f     string         //field
 	v     *string        // value
 	t     *time.Duration //超时
 	build bool           //构建完成后放可执行
@@ -85,11 +89,15 @@ func (m *RedisManger) WithHostKey(host, bz string) *RedisManger {
 	m.k = m.BuildHostKey(host, bz)
 	return m
 }
+func (m *RedisManger) WithHostKeyWithDate(host, date, bz string) *RedisManger {
+	m.k = m.BuildHostKeyWithDate(host, date, bz)
+	return m
+}
 func (m *RedisManger) WithUserKey(virtId int64, userId int64, bz string) *RedisManger {
 	m.k = m.BuildUserKey(virtId, userId, bz)
 	return m
 }
-func (m *RedisManger) WithField(f *string) *RedisManger {
+func (m *RedisManger) WithField(f string) *RedisManger {
 	m.f = f
 	return m
 }
@@ -97,22 +105,27 @@ func (m *RedisManger) WithExp(t *time.Duration) *RedisManger {
 	m.t = t
 	return m
 }
+func (m *RedisManger) WithVal(v string) *RedisManger {
+	m.v = &v
+	m.build = true
+	return m
+}
 
 func (m *RedisManger) MustBuild() *RedisManger {
-	if !m.validMode() {
-		return m
+	if m.validMode() {
+		if err := copier.CopyWithOption(m.tp, m.s, convert.Time2DefaultFormatStr()); err != nil {
+			logx.Errorf("MustBuild copy err:%v,tp:%+v", err, m.tp)
+			return m
+		}
+		ms, err := json.Marshal(m.tp)
+		if err != nil {
+			logx.Errorf("MustBuild marshal err:%v,tp:%+v", err, m.tp)
+			return m
+		}
+		i := string(ms)
+		m.v = &i
 	}
-	if err := copier.CopyWithOption(m.tp, m.s, convert.Time2DefaultFormatStr()); err != nil {
-		logx.Errorf("MustBuild copy err:%v,tp:%+v", err, m.tp)
-		return m
-	}
-	ms, err := json.Marshal(m.tp)
-	if err != nil {
-		logx.Errorf("MustBuild marshal err:%v,tp:%+v", err, m.tp)
-		return m
-	}
-	i := string(ms)
-	m.v = &i
+
 	m.build = true
 	return m
 }
@@ -125,12 +138,11 @@ func (m *RedisManger) QMustBuild() *RedisManger {
 	return m
 }
 
-// 执行set
 func (m *RedisManger) SetResult() bool {
 	if !m.valid() {
 		return false
 	}
-	if strs.IsEmpty(m.k) {
+	if strs.IsDefault(m.k) {
 		return false
 	}
 	m.build = false
@@ -139,11 +151,22 @@ func (m *RedisManger) SetResult() bool {
 	}
 	return m.dfSet()
 }
+
 func (m *RedisManger) IncrResult() bool {
 	if !m.validKey() {
 		return false
 	}
-	return m.R.Incr(*m.k) > 0
+	return m.R.Incr(m.k) > 0
+}
+func (m *RedisManger) QIncrResult() int64 {
+	if !m.validKey() {
+		return 0
+	}
+	b, s := m.R.Get(m.k)
+	if !b {
+		return 0
+	}
+	return strs.StrsToInt64(s)
 }
 
 // 执行hset
@@ -156,11 +179,12 @@ func (m *RedisManger) HSetResult() bool {
 	m.build = false
 	return r
 }
+
 func (m *RedisManger) HMSetResult() bool {
 	if !m.valid() {
 		return false
 	}
-	if strs.IsEmpty(m.k) {
+	if strs.IsDefault(m.k) {
 		return false
 	}
 	if m.t != nil {
@@ -176,7 +200,7 @@ func (m *RedisManger) QueryResult() interface{} {
 	if !m.valid() {
 		return false
 	}
-	b, s := m.R.Get(*m.k)
+	b, s := m.R.Get(m.k)
 	if !b {
 		return nil
 	}
@@ -188,7 +212,7 @@ func (m *RedisManger) HQueryResult() interface{} {
 	if !m.valid() {
 		return false
 	}
-	s := m.R.HGet(*m.k, *m.f)
+	s := m.R.HGet(m.k, m.f)
 	if strs.IsDefault(s) {
 		return m.tp
 	}
@@ -205,7 +229,7 @@ func (m *RedisManger) HQueryResultVal() interface{} {
 	if !m.validField() {
 		return false
 	}
-	s := m.R.HGet(*m.k, *m.f)
+	s := m.R.HGet(m.k, m.f)
 	if strs.IsDefault(s) {
 		return m.tp
 	}
@@ -216,25 +240,38 @@ func (m *RedisManger) HQueryResultVal() interface{} {
 
 // 执行删除
 func (m *RedisManger) DelResult() bool {
-	if strs.IsEmpty(m.k) {
+	if strs.IsDefault(m.k) {
 		return false
 	}
-	return m.R.Del(*m.k)
+	return m.R.Del(m.k)
 }
 
 func (m *RedisManger) RunScriptResult(script string) interface{} {
-	r := m.R.client.Eval(context.Background(), script, []string{*m.k}, *m.f, *m.v).Val()
+	r := m.R.client.Eval(context.Background(), script, []string{m.k}, m.f, *m.v).Val()
 	return r
 }
-func (m *RedisManger) StatScriptExpResult() bool {
+func (m *RedisManger) StatScriptResult() bool {
 	if !m.scriptValid() {
 		return false
 	}
-	v, err := m.R.client.Eval(context.Background(), *m.incrScript(), []string{*m.k}, *m.f, 1, m.formatSec(*m.t)).Int()
+	v, err := m.R.client.Eval(context.Background(), *m.incrScript(), []string{m.k}, m.f, 1).Int()
 	if err != nil {
-		logx.Errorf("StatIncr key:%v,field:%v, err:%v", *m.k, *m.f, err)
+		logx.Errorf("StatIncr key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false
 	}
 	logx.Infof("StatScriptExpResult info:%v", v)
 	return true
+}
+func (m *RedisManger) HAllQResult() *map[string]string {
+	if !m.validKey() {
+		return nil
+	}
+	all := m.R.HGetAll(m.k)
+	return &all
+}
+func (m *RedisManger) GetInt(ms *map[string]string, f string) int64 {
+	if c, ok := (*ms)[f]; ok {
+		return strs.StrsToInt64(c)
+	}
+	return 0
 }

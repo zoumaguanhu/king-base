@@ -7,22 +7,29 @@ import (
 )
 
 func (m *RedisManger) dfSet() bool {
-	return m.R.Set(*m.k, *m.v)
+	return m.R.Set(m.k, *m.v)
 }
 func (m *RedisManger) dfHSet() bool {
 	k := *m.v
-	return m.R.HSet(*m.k, *m.f, k)
+	return m.R.HSet(m.k, m.f, k)
 }
 
 func (m *RedisManger) setEx() bool {
-	return m.R.SetEX(*m.k, *m.v, *m.t)
+	return m.R.SetEX(m.k, *m.v, *m.t)
 }
 func (m *RedisManger) hSetEx() bool {
-	return m.R.SetEX(*m.k, *m.v, *m.t)
+	return m.R.SetEX(m.k, *m.v, *m.t)
 }
 func (m *RedisManger) validMode() bool {
 	if m.tp == nil {
 		logx.Errorf("not invoke Mode fun")
+		return false
+	}
+	return true
+}
+func (m *RedisManger) validVal() bool {
+	if m.v == nil {
+		logx.Errorf("not invoke validVal fun")
 		return false
 	}
 	return true
@@ -46,20 +53,33 @@ func (m *RedisManger) validBuild() bool {
 	return true
 }
 func (m *RedisManger) validField() bool {
-	if strs.IsEmpty(m.f) {
+	if strs.IsDefault(m.f) {
 		logx.Errorf("not invoke WithField fun")
 		return false
 	}
 	return true
 }
 func (m *RedisManger) validKey() bool {
-	if strs.IsEmpty(m.k) {
+	if strs.IsDefault(m.k) {
 		logx.Errorf("not invoke WithKey fun")
 		return false
 	}
 	return true
 }
 func (m *RedisManger) hValid() bool {
+	if !m.validKey() {
+		return false
+	}
+	if !m.validField() {
+		return false
+	}
+	if !m.build {
+		logx.Errorf("not invoke MustBuild fun")
+		return false
+	}
+	return true
+}
+func (m *RedisManger) hmValid() bool {
 	if !m.validMode() {
 		return false
 	}
@@ -90,12 +110,12 @@ func (m *RedisManger) incrScript() *string {
 		local key = KEYS[1]
 		local field = ARGV[1]
 		local increment = tonumber(ARGV[2])
-		local ttl = tonumber(ARGV[3])
+		-- local ttl = tonumber(ARGV[3])
 		
 		-- 如果字段不存在，先初始化为0
 		if redis.call("HEXISTS", key, field) == 0 then
 			redis.call("HSET", key, field, 0)
-			redis.call("EXPIRE", key, ttl)
+		--	redis.call("EXPIRE", key, ttl)
 		end
 		
 		-- 执行自增并返回新值

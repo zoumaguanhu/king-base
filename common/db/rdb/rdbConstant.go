@@ -7,13 +7,21 @@ const (
 )
 const (
 	SITE = "v_site_info"
+	HOST = "host"
 )
 const (
-	STAT_PV = "pv"
-	STAT_UV = "uv"
+	STAT_PV   = "pv"
+	STAT_UV   = "uv"
+	SYNC_TIME = "sync_time"
 )
 const (
-	STAT_EXP_TIME = time.Duration(1296000 * time.Second) // 15 * 24 * 60 * 60
+	STAT_TYPE_1 int64 = 1
+	STAT_TYPE_2 int64 = 2
+	STAT_TYPE_3 int64 = 3
+	STAT_TYPE_4 int64 = 4
+)
+const (
+	STAT_EXP_TIME = time.Duration(604800 * time.Second) // 7 * 24 * 60 * 60
 )
 
 // product缓存bz关键字
