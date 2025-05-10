@@ -346,6 +346,7 @@ func (s *RabbitMQEndpoint) MonitorConnection() {
 		s.conn.NotifyClose(notifyClose)
 
 		for {
+			time.Sleep(5)
 			select {
 			case <-s.done:
 				return
@@ -365,9 +366,7 @@ func (s *RabbitMQEndpoint) MonitorConnection() {
 							s.StartConsumer()
 							break
 						}
-
 						log.Printf("Failed to reconnect to RabbitMQ: %v. Retrying in %s...", err, 5)
-						time.Sleep(5)
 					}
 				}
 			}
