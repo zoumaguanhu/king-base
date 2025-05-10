@@ -240,10 +240,21 @@ func (m *RedisManger) HQueryResultVal() interface{} {
 
 // 执行删除
 func (m *RedisManger) DelResult() bool {
-	if strs.IsDefault(m.k) {
+	if !m.validKey() {
 		return false
 	}
 	return m.R.Del(m.k)
+}
+
+// 执行删除
+func (m *RedisManger) HDelResult() bool {
+	if !m.validKey() {
+		return false
+	}
+	if !m.validField() {
+		return false
+	}
+	return m.R.HDel(m.k, m.f)
 }
 
 func (m *RedisManger) RunScriptResult(script string) interface{} {

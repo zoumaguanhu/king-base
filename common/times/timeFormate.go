@@ -140,3 +140,9 @@ func DateDiff(dateStr1, dateStr2, layout string) (int, error) {
 func isLeapYear(year int) bool {
 	return (year%4 == 0 && year%100 != 0) || (year%400 == 0)
 }
+func PreviousDate() string {
+	now := time.Now()
+	yesterday := now.AddDate(0, 0, -1)
+
+	return yesterday.Format(DATE) // Go的参考时间格式
+}
