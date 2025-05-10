@@ -98,3 +98,45 @@ func ExpDurationTime(expTime string, t time.Duration) *time.Duration {
 	v := time.Duration(d) * t
 	return &v
 }
+
+// DateDiff 计算两个日期字符串之间的天数差
+func DateDiff(dateStr1, dateStr2, layout string) (int, error) {
+	// 解析日期字符串
+	date1, err := time.Parse(layout, dateStr1)
+	if err != nil {
+		return 0, err
+	}
+	date2, err := time.Parse(layout, dateStr2)
+	if err != nil {
+		return 0, err
+	}
+
+	// 确保date2 >= date1，避免负数
+	if date2.Before(date1) {
+		date1, date2 = date2, date1
+	}
+
+	// 计算天数差（忽略时间部分，只计算日期差）
+	day1 := date1.YearDay()
+	day2 := date2.YearDay()
+	year1 := date1.Year()
+	year2 := date2.Year()
+
+	// 如果年份不同，需要累加整年的天数
+	if year1 != year2 {
+		// 累加从year1到year2-1的整年天数
+		for y := year1; y < year2; y++ {
+			day2 += 365
+			if isLeapYear(y) {
+				day2++ // 闰年多一天
+			}
+		}
+	}
+
+	return day2 - day1, nil
+}
+
+// 判断是否为闰年
+func isLeapYear(year int) bool {
+	return (year%4 == 0 && year%100 != 0) || (year%400 == 0)
+}

@@ -39,6 +39,7 @@ const (
 	NOT_FOUNT_SITE = "not found site"
 )
 const RD_SEPARATOR = ":"
+const DATE_360 int = 360
 
 // 双引号空
 const EMPTY_STRING = ""
