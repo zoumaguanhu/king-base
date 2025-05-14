@@ -13,6 +13,7 @@ type UserInfo struct {
 	VirtId    int64  `json:"virtId"`
 	BuildTime string `json:"buildTime"`
 }
+
 type SiteInfo struct {
 	Id           int64  `json:"id"`
 	Name         string `json:"name"`

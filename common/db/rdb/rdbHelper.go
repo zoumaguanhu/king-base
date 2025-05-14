@@ -35,15 +35,22 @@ func (m *RedisManger) validVal() bool {
 	return true
 }
 func (m *RedisManger) valid() bool {
-	if !m.validMode() {
+	if !m.validKey() {
 		return false
 	}
-	if !m.validKey() {
+	if !m.validVal() {
 		return false
 	}
 	if !m.validBuild() {
 		return false
 	}
+	return true
+}
+func (m *RedisManger) qValid() bool {
+	if !m.validKey() {
+		return false
+	}
+
 	return true
 }
 func (m *RedisManger) validBuild() bool {
@@ -105,7 +112,7 @@ func (m *RedisManger) scriptValid() bool {
 
 	return true
 }
-func (m *RedisManger) incrScript() *string {
+func (m *RedisManger) incrHScript() *string {
 	script := `
 		local key = KEYS[1]
 		local field = ARGV[1]
@@ -120,6 +127,16 @@ func (m *RedisManger) incrScript() *string {
 		
 		-- 执行自增并返回新值
 		return redis.call("HINCRBY", key, field, increment)
+	`
+	return &script
+}
+func (m *RedisManger) incrScript() *string {
+	script := `
+		local current = redis.call('INCRBY', KEYS[1], ARGV[2] or 1)
+		if current == 1 then
+			redis.call('EXPIRE', KEYS[1], ARGV[1])
+		end
+		return current
 	`
 	return &script
 }

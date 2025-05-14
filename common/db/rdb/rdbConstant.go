@@ -6,8 +6,10 @@ const (
 	CLIENT_STAT_PV = "stat_pv"
 )
 const (
-	SITE = "v_site_info"
-	HOST = "host"
+	SITE   = "v_site_info"
+	HOST   = "host"
+	CLIENT = "client"
+	STAT   = "stat"
 )
 const (
 	STAT_PV   = "pv"
@@ -21,7 +23,10 @@ const (
 	STAT_TYPE_4 int64 = 4
 )
 const (
-	STAT_EXP_TIME = time.Duration(604800 * time.Second) // 7 * 24 * 60 * 60
+	STAT_EXP_TIME             = time.Duration(604800 * time.Second) // 7 * 24 * 60 * 60
+	DANGER_CLIENT_LIMIT       = 6
+	DANGER_ADMIN_LIMIT        = 6
+	ADMIN_TRY_COUNT_LIMIT int = 5
 )
 
 // product缓存bz关键字
@@ -31,5 +36,10 @@ const (
 
 // user缓存bz关键字
 const (
-	USER_INFO = "user_info"
+	USER_INFO            string = "user_info"
+	USER_TEMP            string = "user_temp"
+	USER_TEMP_EXP        int64  = 1
+	USER_TEMP_FLG        string = "1"
+	USER_TRY_COUNT       string = "try_count"
+	USER_TRY_COUNT_LIMIT int    = 5
 )
