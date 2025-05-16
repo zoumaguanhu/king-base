@@ -1,7 +1,9 @@
 package strs
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/zeromicro/go-zero/core/logx"
 	"king.com/king/base/common/arrs"
 	"king.com/king/base/common/constants"
 	"strconv"
@@ -168,4 +170,12 @@ func ParseSiteUrl(url string) *[]string {
 		*ss = append(*ss, cleaned)
 	}
 	return ss
+}
+func ObjToStr(obj any) string {
+	b, err := json.Marshal(obj)
+	if err != nil {
+		logx.Errorf("ObjToStr obj:%+v err:%v", obj, err)
+		return constants.DEFAULT_STR
+	}
+	return string(b)
 }

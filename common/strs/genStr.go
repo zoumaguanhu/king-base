@@ -58,6 +58,9 @@ func GenStr(l int) string {
 func GenSnStr() string {
 	return gt.generateRandomAlphanumeric(32)
 }
+func GenMsgIdStr() string {
+	return gt.generateRandomAlphanumeric(32)
+}
 func GenAcCodeStr() string {
 	s := gt.generateRandomAlphanumeric(12)
 	return strings.ToUpper(s)

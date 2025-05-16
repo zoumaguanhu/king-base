@@ -20,6 +20,8 @@ const FALSE bool = false
 const LETTER_BYTES = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 const TRACE_ID string = "TRACE_ID"
 const USER_ID string = "userID"
+const FINGER_FLG string = "finger"
+const FINGER_FILL string = "|jwt@hex@client|"
 const ROLE string = "role"
 const VIRT_ID string = "virtId"
 const VIRT_IDS string = "virtIds"
@@ -34,12 +36,14 @@ const PER_CENT string = "%"
 const DLX_PREFIX string = "dlx_"
 const DIRECT string = "direct"
 const SHORT_LINE = "_"
+const X_FORWARDED_FOR = "X-Forwarded-For"
+const X_REAL_IP = "X-Real-IP"
 const (
 	FIELD_VIRT_ID  = "virt_id"
 	NOT_FOUNT_SITE = "not found site"
 )
 const RD_SEPARATOR = ":"
-const DATE_360 int = 360
+const DATE_366 int = 366
 
 // 双引号空
 const EMPTY_STRING = ""
@@ -102,4 +106,7 @@ const (
 	ROLE_1 int64 = 1
 	ROLE_2 int64 = 2
 	ROLE_3 int64 = 3
+)
+const (
+	COMMAND_TYPE_UPDATE = "update"
 )

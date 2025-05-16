@@ -118,7 +118,13 @@ func NewRabbitMQEndpoint(mq *RabbitMQ) (*RabbitMQEndpoint, error) {
 		consumerList: &[]ConsumerFun{},
 	}, nil
 }
-func (s RabbitMQEndpoint) StartConsumer() {
+func (s *RabbitMQEndpoint) QueuesMap() *map[string]*QueueConfig {
+	return s.queueMap
+}
+func (s *RabbitMQEndpoint) ExchangeMap() *map[string]*ExchangeConfig {
+	return s.exchangeMap
+}
+func (s *RabbitMQEndpoint) StartConsumer() {
 	go func() {
 		defer func() {
 			if r := recover(); r != nil {
