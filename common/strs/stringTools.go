@@ -179,3 +179,12 @@ func ObjToStr(obj any) string {
 	}
 	return string(b)
 }
+func StrToObj(s *string, c interface{}) {
+	if err := json.Unmarshal([]byte(*s), c); err != nil {
+		logx.Errorf("StrToObj obj:%v err:%v", *s, err)
+	}
+
+}
+func IntToStr(num int64) string {
+	return strconv.FormatInt(num, 10)
+}

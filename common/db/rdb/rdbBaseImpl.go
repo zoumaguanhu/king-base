@@ -40,6 +40,10 @@ func (r *RdbBaseImpl) BuildSiteKey(virtId int64, bz string) string {
 	s := fmt.Sprintf("site:vsite:%v:%v", virtId, bz)
 	return s
 }
+func (r *RdbBaseImpl) BuildSiteProductKey(virtId int64, bz string) string {
+	s := fmt.Sprintf("site:vsite:%v:%v", virtId, bz)
+	return s
+}
 func (r *RdbBaseImpl) BuildUserKey(virtId int64, userId int64, bz string) string {
 	s := fmt.Sprintf("site:virtId:%v:userId:%v:%v", virtId, userId, bz)
 	return s
@@ -97,6 +101,10 @@ func (m *RedisManger) WithKey(key, bz string) *RedisManger {
 }
 func (m *RedisManger) WithSiteKey(virtId int64, bz string) *RedisManger {
 	m.k = m.BuildSiteKey(virtId, bz)
+	return m
+}
+func (m *RedisManger) WithSiteProductKey(virtId int64, bz string) *RedisManger {
+	m.k = m.BuildSiteProductKey(virtId, bz)
 	return m
 }
 func (m *RedisManger) WithHostKey(host, bz string) *RedisManger {
@@ -322,6 +330,31 @@ func (m *RedisManger) StatScriptResult() (bool, int) {
 		return false, 0
 	}
 	logx.Infof("StatScriptExpResult info:%v", v)
+	return true, v
+}
+func (m *RedisManger) AddProductScriptResult(data any, sort int64, id string) (bool, int) {
+	if !m.validKey() {
+		return false, 0
+	}
+	d := strs.ObjToStr(data)
+	v, err := m.R.client.Eval(context.Background(), *m.addProductScript(), []string{m.k, id}, sort, d).Int()
+	if err != nil {
+		logx.Errorf("AddProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	logx.Infof("AddProductScriptResult info:%v", v)
+	return true, v
+}
+func (m *RedisManger) DelProductScriptResult(id string) (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.delProductScript(), []string{m.k}, id).Result()
+	if err != nil {
+		logx.Errorf("DelProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	logx.Infof("DelProductScriptResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) HAllQResult() *map[string]string {

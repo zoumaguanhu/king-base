@@ -18,7 +18,7 @@ const NUM_120_FLOAT64 float64 = 120
 const TRUE bool = true
 const FALSE bool = false
 const LETTER_BYTES = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-const TRACE_ID string = "TRACE_ID"
+const TRACE_ID string = "trace_id"
 const USER_ID string = "userID"
 const FINGER_FLG string = "finger"
 const FINGER_FILL string = "|jwt@hex@client|"
@@ -60,6 +60,10 @@ const (
 	STATUS_6 int64 = 6
 	STATUS_7 int64 = 7
 	STATUS_8 int64 = 8
+)
+const (
+	PUBLISH_1 int64 = 1
+	PUBLISH_2 int64 = 2
 )
 const (
 	HTTP_CONTENT_TYPE      string = "Content-Type"

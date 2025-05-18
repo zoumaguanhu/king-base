@@ -162,14 +162,16 @@ func (s *RabbitMQEndpoint) ConsumeMessages(queueName string, handler func(d amqp
 	sem := make(chan struct{}, 10)
 
 	for d := range chs {
+		logx.Infof("get goroutine from sem current len :%v", len(sem))
 		sem <- struct{}{}
 		logx.Infof("get goroutine from sem limit :%v", len(sem))
 		go func(m *amqp.Delivery) {
 			defer func() {
 				if r := recover(); r != nil {
-					logx.Errorf("panic err: %v\n", r)
+					logx.Errorf("ConsumeMessages panic err: %v\n", r)
 				}
 				<-sem
+				logx.Errorf("ConsumeMessages sem len:%d", len(sem))
 			}()
 			if e := handler(*m); e != nil {
 				s.maxRetryCount(queueName, m)
@@ -379,4 +381,11 @@ func (s *RabbitMQEndpoint) MonitorConnection() {
 		}
 	}()
 
+}
+func (s *RabbitMQEndpoint) ParseMsg(data *[]byte) *MsgBody {
+	m := &MsgBody{}
+	if err := json.Unmarshal(*data, m); err != nil {
+		logx.Errorf("ParseMsg data:%v,err:%v", string(*data), err)
+	}
+	return m
 }
