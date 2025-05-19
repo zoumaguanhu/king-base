@@ -149,28 +149,15 @@ func (m *RedisManger) formatSec(dur time.Duration) int64 {
 }
 func (m *RedisManger) ProductPageScript() *string {
 	script := `-- 获取总数量
-		local total = redis.call('ZCARD', KEYS[1])
-		
+		local k = KEYS[1]
+		local k1= k .. '_set'
+		local k2= k .. '_hash'
+		local total = redis.call('ZCARD',k1)
 		-- 获取分页的产品ID列表
-		local productIDs = redis.call('ZREVRANGE', KEYS[1], ARGV[1], ARGV[2])
-		
+		local productIDs = redis.call('ZREVRANGE', k1, ARGV[1], ARGV[2])
+	
 		-- 批量获取产品详情
-		local products = {}
-		for i, id in ipairs(productIDs) do
-			local productKey = KEYS[2] .. id
-			local product = redis.call('HGETALL', productKey)
-			
-			-- 获取产品评分
-			local score = redis.call('ZSCORE', KEYS[1], id)
-			
-			-- 将评分添加到产品数据中
-			if score then
-				table.insert(product, "score")
-				table.insert(product, score)
-			end
-			
-			table.insert(products, product)
-		end
+		local products = redis.call('HMGET',k2, unpack(productIDs))
 		
 		return {total, products} `
 	return &script
@@ -179,7 +166,8 @@ func (m *RedisManger) addProductScript() *string {
 	script := `
 	local k = KEYS[1]
 	local id = KEYS[2]
-	local k1 = k .. ':' .. id
+	local k1 = k .. '_hash' 
+	local k2 = k .. '_set' 
 	
 	local sortScore = ARGV[1]
 	local productData = ARGV[2]
@@ -188,7 +176,7 @@ func (m *RedisManger) addProductScript() *string {
 	redis.call('HSET', k1, id, productData)
 	
 	-- 更新ZSet索引
-	redis.call('ZADD', k, sortScore, id)
+	redis.call('ZADD', k2, sortScore, id)
 	
 	return 1
 	`
@@ -197,11 +185,58 @@ func (m *RedisManger) addProductScript() *string {
 func (m *RedisManger) delProductScript() *string {
 	script := `
 	local k = KEYS[1]
-	local k1 = k .. ':' .. ARGV[1]
-	local zsetResult = redis.call('ZREM', k, ARGV[1])
+	local k1 = k .. '_hash'
+	local k2 = k .. '_set'
+	local zsetResult = redis.call('ZREM', k2, ARGV[1])
    	local hashResult = redis.call('HDEL', k1, ARGV[1])
     
  
     return {zsetResult, hashResult}`
+	return &script
+}
+func (m *RedisManger) bannerListScript() *string {
+	script := `
+	local k = KEYS[1]
+		local k1= k .. '_set'
+		local k2= k .. '_hash'
+
+		-- 获取分页的产品ID列表
+		local bannerIDs = redis.call('ZREVRANGE', k1, 0, -1)
+	
+		-- 批量获取产品详情
+		local products = redis.call('HMGET',k2, unpack(bannerIDs))
+		
+		return products`
+	return &script
+}
+func (m *RedisManger) addBannerScript() *string {
+	script := `
+	local k = KEYS[1]
+	local id = KEYS[2]
+	local k1 = k .. '_hash' 
+	local k2 = k .. '_set' 
+	
+	local sortScore = ARGV[1]
+	local bannerData = ARGV[2]
+	
+	-- 更新Hash
+	redis.call('HSET', k1, id, bannerData)
+	
+	-- 更新ZSet索引
+	redis.call('ZADD', k2, sortScore, id)
+	
+	return 1`
+	return &script
+}
+func (m *RedisManger) delBannerScript() *string {
+	script := `
+	local k = KEYS[1]
+	local k1 = k .. '_hash'
+	local k2 = k .. '_set'
+	local zsetResult = redis.call('ZREM', k2, ARGV[1])
+   	local hashResult = redis.call('HDEL', k1, ARGV[1])
+    
+ 
+    return 1`
 	return &script
 }

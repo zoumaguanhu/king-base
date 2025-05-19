@@ -17,6 +17,16 @@ type MsgStruct struct {
 	Body   *MsgBody
 }
 type MsgProduct struct {
-	Id     int64 `json:"id"`
-	VirtId int64 `json:"virtId"`
+	Id      int64 `json:"id"`
+	VirtId  int64 `json:"virtId"`
+	Updater int64 `json:"updater"`
+}
+type MsgSite struct {
+	Id      int64 `json:"id"`
+	Updater int64 `json:"updater"`
+}
+type MsgBanner struct {
+	Id      int64 `json:"id"`
+	VirtId  int64 `json:"virtId"`
+	Updater int64 `json:"updater"`
 }

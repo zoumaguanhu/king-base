@@ -40,8 +40,12 @@ func (r *RdbBaseImpl) BuildSiteKey(virtId int64, bz string) string {
 	s := fmt.Sprintf("site:vsite:%v:%v", virtId, bz)
 	return s
 }
-func (r *RdbBaseImpl) BuildSiteProductKey(virtId int64, bz string) string {
+func (r *RdbBaseImpl) BuildBannerKey(virtId int64, bz string) string {
 	s := fmt.Sprintf("site:vsite:%v:%v", virtId, bz)
+	return s
+}
+func (r *RdbBaseImpl) BuildSiteProductKey(virtId int64, bz string) string {
+	s := fmt.Sprintf("site:vsite:%v:page:%v", virtId, bz)
 	return s
 }
 func (r *RdbBaseImpl) BuildUserKey(virtId int64, userId int64, bz string) string {
@@ -125,6 +129,10 @@ func (m *RedisManger) WithHostKeyWithDate(host, date, bz string) *RedisManger {
 }
 func (m *RedisManger) WithUserKey(virtId int64, userId int64, bz string) *RedisManger {
 	m.k = m.BuildUserKey(virtId, userId, bz)
+	return m
+}
+func (m *RedisManger) WithBannerKey(virtId int64, bz string) *RedisManger {
+	m.k = m.BuildBannerKey(virtId, bz)
 	return m
 }
 func (m *RedisManger) WithEmailKey(virtId int64, email string, bz string) *RedisManger {
@@ -332,6 +340,18 @@ func (m *RedisManger) StatScriptResult() (bool, int) {
 	logx.Infof("StatScriptExpResult info:%v", v)
 	return true, v
 }
+func (m *RedisManger) ProductPageScriptResult(start int64, end int64) (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.ProductPageScript(), []string{m.k}, start, end).Result()
+	if err != nil {
+		logx.Errorf("AddProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	logx.Infof("AddProductScriptResult info:%v", v)
+	return true, v
+}
 func (m *RedisManger) AddProductScriptResult(data any, sort int64, id string) (bool, int) {
 	if !m.validKey() {
 		return false, 0
@@ -356,6 +376,43 @@ func (m *RedisManger) DelProductScriptResult(id string) (bool, interface{}) {
 	}
 	logx.Infof("DelProductScriptResult info:%v", v)
 	return true, v
+}
+
+func (m *RedisManger) AddBannerScriptResult(id string, sort int64, data string) bool {
+	if !m.validKey() {
+		return false
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.addBannerScript(), []string{m.k, id}, sort, data).Int()
+	if err != nil {
+		logx.Errorf("AddBannerScriptResult key:%v,sort:%v,value:%v, err:%v", m.k, sort, data, err)
+		return false
+	}
+	logx.Infof("AddBannerScriptResult info:%v", v)
+	return v > 0
+}
+func (m *RedisManger) BannerListScriptResult() (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.bannerListScript(), []string{m.k}).Result()
+	if err != nil {
+		logx.Errorf("BannerListScriptResult key:%v, err:%v", m.k, err)
+		return false, 0
+	}
+	logx.Infof("BannerListScriptResult info:%v", v)
+	return true, v
+}
+func (m *RedisManger) DelBannerScriptResult(id int64) bool {
+	if !m.validKey() {
+		return false
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.delBannerScript(), []string{m.k}, id).Int()
+	if err != nil {
+		logx.Errorf("DelBannerScriptResult key:%v,sort:%v err:%v", m.k, id, err)
+		return false
+	}
+	logx.Infof("DelBannerScriptResult info:%v", v)
+	return v > 0
 }
 func (m *RedisManger) HAllQResult() *map[string]string {
 	if !m.validKey() {

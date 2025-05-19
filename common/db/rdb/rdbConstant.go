@@ -6,11 +6,14 @@ const (
 	CLIENT_STAT_PV = "stat_pv"
 )
 const (
-	SITE    = "v_site_info"
-	HOST    = "host"
-	CLIENT  = "client"
-	STAT    = "stat"
-	PRODUCT = "product"
+	SITE         = "v_site_info"
+	HOST         = "host"
+	CLIENT       = "client"
+	STAT         = "stat"
+	PRODUCT      = "product"
+	PRODUCT_HASH = "product_hash"
+	PRODUCT_SET  = "product_set"
+	BANNER       = "banner"
 )
 const (
 	STAT_PV   = "pv"

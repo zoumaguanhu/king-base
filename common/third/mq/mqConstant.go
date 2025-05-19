@@ -8,4 +8,6 @@ const (
 // bz类型
 const (
 	PRODUCT = "product"
+	SITE    = "site"
+	BANNER  = "banner"
 )

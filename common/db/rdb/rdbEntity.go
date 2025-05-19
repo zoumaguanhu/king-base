@@ -30,3 +30,10 @@ type SiteInfo struct {
 type SiteStat struct {
 	Count int64 `json:"count"`
 }
+
+type BannerInfo struct {
+	Id         int64  `json:"id"`
+	BannerUrl  string `json:"bannerUrl"`
+	RouteToUrl string `json:"routeToUrl"`
+	BSort      int64  `json:"BSort"`
+}
