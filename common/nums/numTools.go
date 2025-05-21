@@ -53,3 +53,9 @@ func Difference(A, B *[]int64) *[]int64 {
 func Int64ToStr(num int64) string {
 	return strconv.FormatInt(num, 10)
 }
+func FloatIsDefault(num float64) bool {
+	return num == 0
+}
+func FloatToStr(f float64) string {
+	return strconv.FormatFloat(f, 'f', 2, 64)
+}

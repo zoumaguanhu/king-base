@@ -188,3 +188,10 @@ func StrToObj(s *string, c interface{}) {
 func IntToStr(num int64) string {
 	return strconv.FormatInt(num, 10)
 }
+func StrToFloat64(s string) float64 {
+	f64, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		logx.Errorf("StrToFloat64 s:%v err:%v", s, err)
+	}
+	return f64
+}

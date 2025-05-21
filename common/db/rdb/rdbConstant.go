@@ -29,7 +29,7 @@ const (
 const (
 	STAT_EXP_TIME             = time.Duration(604800 * time.Second) // 7 * 24 * 60 * 60
 	DANGER_CLIENT_LIMIT       = 6
-	DANGER_ADMIN_LIMIT        = 6
+	DANGER_ADMIN_LIMIT        = 8
 	ADMIN_TRY_COUNT_LIMIT int = 5
 )
 
