@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/jinzhu/copier"
+	"github.com/zeromicro/go-zero/core/logc"
 	"github.com/zeromicro/go-zero/core/logx"
 	"king.com/king/base/common/constants"
 	"king.com/king/base/common/convert"
@@ -13,7 +14,8 @@ import (
 )
 
 type RdbBaseImpl struct {
-	R *RedisClient
+	R   *RedisClient
+	ctx context.Context
 }
 
 func (r *RdbBaseImpl) BuildKey(key, bz string) string {
@@ -90,7 +92,10 @@ func NewRM(R *RedisClient) *RedisManger {
 	r.R = R
 	return r
 }
-
+func (m *RedisManger) WithCtx(ctx context.Context) *RedisManger {
+	m.ctx = ctx
+	return m
+}
 func (m *RedisManger) Source(s interface{}) *RedisManger {
 	m.s = s
 	return m
@@ -159,12 +164,12 @@ func (m *RedisManger) WithStep(step int64) *RedisManger {
 func (m *RedisManger) MustBuild() *RedisManger {
 	if m.tp != nil {
 		if err := copier.CopyWithOption(m.tp, m.s, convert.Time2DefaultFormatStr()); err != nil {
-			logx.Errorf("MustBuild copy err:%v,tp:%+v", err, m.tp)
+			logc.Errorf(m.ctx, "MustBuild copy err:%v,tp:%+v", err, m.tp)
 			return m
 		}
 		ms, err := json.Marshal(m.tp)
 		if err != nil {
-			logx.Errorf("MustBuild marshal err:%v,tp:%+v", err, m.tp)
+			logc.Errorf(m.ctx, "MustBuild marshal err:%v,tp:%+v", err, m.tp)
 			return m
 		}
 		i := string(ms)
@@ -322,10 +327,10 @@ func (m *RedisManger) StatHScriptResult() bool {
 	}
 	v, err := m.R.client.Eval(context.Background(), *m.incrHScript(), []string{m.k}, m.f, 1).Int()
 	if err != nil {
-		logx.Errorf("StatIncr key:%v,field:%v, err:%v", m.k, m.f, err)
+		logc.Errorf(m.ctx, "StatIncr key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false
 	}
-	logx.Infof("StatScriptExpResult info:%v", v)
+	logc.Infof(m.ctx, "StatScriptExpResult info:%v", v)
 	return true
 }
 func (m *RedisManger) StatScriptResult() (bool, int) {
@@ -334,10 +339,10 @@ func (m *RedisManger) StatScriptResult() (bool, int) {
 	}
 	v, err := m.R.client.Eval(context.Background(), *m.incrScript(), []string{m.k}, m.formatSec(*m.t), m.step).Int()
 	if err != nil {
-		logx.Errorf("StatIncr key:%v,field:%v, err:%v", m.k, m.f, err)
+		logc.Errorf(m.ctx, "StatIncr key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
-	logx.Infof("StatScriptExpResult info:%v", v)
+	logc.Infof(m.ctx, "StatScriptExpResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) ProductPageScriptResult(start int64, end int64) (bool, interface{}) {
@@ -346,10 +351,10 @@ func (m *RedisManger) ProductPageScriptResult(start int64, end int64) (bool, int
 	}
 	v, err := m.R.client.Eval(context.Background(), *m.ProductPageScript(), []string{m.k}, start, end).Result()
 	if err != nil {
-		logx.Errorf("AddProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		logc.Errorf(m.ctx, "AddProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
-	logx.Infof("AddProductScriptResult info:%v", v)
+	logc.Infof(m.ctx, "AddProductScriptResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) AddProductScriptResult(data any, sort int64, id string) (bool, int) {
@@ -359,10 +364,10 @@ func (m *RedisManger) AddProductScriptResult(data any, sort int64, id string) (b
 	d := strs.ObjToStr(data)
 	v, err := m.R.client.Eval(context.Background(), *m.addProductScript(), []string{m.k, id}, sort, d).Int()
 	if err != nil {
-		logx.Errorf("AddProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		logc.Errorf(m.ctx, "AddProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
-	logx.Infof("AddProductScriptResult info:%v", v)
+	logc.Errorf(m.ctx, "AddProductScriptResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) DelProductScriptResult(id string) (bool, interface{}) {
@@ -374,7 +379,7 @@ func (m *RedisManger) DelProductScriptResult(id string) (bool, interface{}) {
 		logx.Errorf("DelProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
-	logx.Infof("DelProductScriptResult info:%v", v)
+	logc.Errorf(m.ctx, "DelProductScriptResult info:%v", v)
 	return true, v
 }
 
@@ -387,7 +392,7 @@ func (m *RedisManger) AddBannerScriptResult(id string, sort int64, data string) 
 		logx.Errorf("AddBannerScriptResult key:%v,sort:%v,value:%v, err:%v", m.k, sort, data, err)
 		return false
 	}
-	logx.Infof("AddBannerScriptResult info:%v", v)
+	logc.Errorf(m.ctx, "AddBannerScriptResult info:%v", v)
 	return v > 0
 }
 func (m *RedisManger) BannerListScriptResult() (bool, interface{}) {
@@ -399,7 +404,7 @@ func (m *RedisManger) BannerListScriptResult() (bool, interface{}) {
 		logx.Errorf("BannerListScriptResult key:%v, err:%v", m.k, err)
 		return false, 0
 	}
-	logx.Infof("BannerListScriptResult info:%v", v)
+	logc.Errorf(m.ctx, "BannerListScriptResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) DelBannerScriptResult(id int64) bool {
@@ -411,7 +416,7 @@ func (m *RedisManger) DelBannerScriptResult(id int64) bool {
 		logx.Errorf("DelBannerScriptResult key:%v,sort:%v err:%v", m.k, id, err)
 		return false
 	}
-	logx.Infof("DelBannerScriptResult info:%v", v)
+	logc.Errorf(m.ctx, "DelBannerScriptResult info:%v", v)
 	return v > 0
 }
 func (m *RedisManger) HAllQResult() *map[string]string {

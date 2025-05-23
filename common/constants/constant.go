@@ -44,6 +44,7 @@ const (
 )
 const RD_SEPARATOR = ":"
 const DATE_366 int = 366
+const CG_FLG string = "cgFlg"
 
 // 双引号空
 const EMPTY_STRING = ""
