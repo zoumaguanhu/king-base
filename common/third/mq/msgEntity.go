@@ -1,5 +1,7 @@
 package mq
 
+import "king.com/king/base/common/third/mail"
+
 type MsgHeader struct {
 	MsgId        string `json:"msgId"`
 	ExchangeName string `json:"exchangeName"`
@@ -11,6 +13,7 @@ type MsgBody struct {
 	CommandType string `json:"commandType"`
 	Bz          string `json:"bz"`
 	MsgContent  string `json:"msgContent"`
+	VirtId      int64  `json:"virtId"`
 }
 type MsgStruct struct {
 	Header *MsgHeader
@@ -29,4 +32,10 @@ type MsgBanner struct {
 	Id      int64 `json:"id"`
 	VirtId  int64 `json:"virtId"`
 	Updater int64 `json:"updater"`
+}
+type MsgEmail struct {
+	MailConfig  *mail.MailConf `json:"mailConfig"`
+	MailContent *mail.Email    `json:"mailContent"`
+	MailType    int64          `json:"mailType"`
+	VirtId      int64          `json:"virtId"`
 }

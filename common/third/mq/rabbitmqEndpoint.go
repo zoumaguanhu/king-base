@@ -3,6 +3,7 @@ package mq
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/google/uuid"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/zeromicro/go-zero/core/logx"
 	"king.com/king/base/common/constants"
@@ -275,6 +276,7 @@ func (s *RabbitMQEndpoint) SendMessage(msg *MsgStruct) error {
 			DeliveryMode: amqp.Persistent,
 			Body:         body,
 			Headers:      headers,
+			MessageId:    uuid.New().String(),
 		}); err != nil {
 		logx.Errorf("failed to publish a message to exchange %s: %w", header.ExchangeName, err)
 	}

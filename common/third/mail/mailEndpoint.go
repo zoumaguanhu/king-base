@@ -2,7 +2,6 @@ package mail
 
 import (
 	"gopkg.in/gomail.v2"
-	"log"
 )
 
 type MailConf struct {
@@ -10,27 +9,43 @@ type MailConf struct {
 	Port     int
 	Username string
 	Password string
-	From     string
+	SSL      bool
 }
 type MailEndpoint struct {
-	mailConf MailConf
+	mailConf *MailConf
+	dialer   *gomail.Dialer
 }
 
-func (l *MailEndpoint) SendMail(to, subject, body string) error {
-	cfg := l.mailConf
+func New(c *MailConf) *MailEndpoint {
+	dialer := gomail.NewDialer(
+		c.Host,
+		c.Port,
+		c.Username,
+		c.Password,
+	)
+	dialer.SSL = c.SSL
+
+	return &MailEndpoint{mailConf: c, dialer: dialer}
+}
+
+type Email struct {
+	From    string
+	To      []string
+	Subject string
+	Body    string
+	IsHTML  bool
+}
+
+func (s *MailEndpoint) SendEmail(email *Email) error {
 	m := gomail.NewMessage()
-	m.SetHeader("From", cfg.From)
-	m.SetHeader("To", to)
-	m.SetHeader("Subject", subject)
-	m.SetBody("text/html", body)
+	m.SetHeader("From", email.From)
+	m.SetHeader("To", email.To...)
+	m.SetHeader("Subject", email.Subject)
 
-	d := gomail.NewDialer(cfg.Host, cfg.Port, cfg.Username, cfg.Password)
-
-	if err := d.DialAndSend(m); err != nil {
-		log.Printf("Failed to send email: %v", err)
-		return err
+	if email.IsHTML {
+		m.SetBody("text/html", email.Body)
+	} else {
+		m.SetBody("text/plain", email.Body)
 	}
-
-	log.Println("Email sent successfully")
-	return nil
+	return s.dialer.DialAndSend(m)
 }

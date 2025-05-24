@@ -1,6 +1,7 @@
 package encryption
 
 import (
+	"fmt"
 	"math/rand"
 	"strings"
 	"time"
@@ -17,7 +18,7 @@ const (
 // 生成指定长度的随机密码
 func generatePassword(length int) string {
 	// 确保字符集不为空
-	allChars := lowercaseLetters + uppercaseLetters + digits + specialChars
+	allChars := fmt.Sprintf("%v%v%v", lowercaseLetters, uppercaseLetters, digits)
 	charSetLength := len(allChars)
 	if charSetLength == 0 || length <= 0 {
 		return ""
