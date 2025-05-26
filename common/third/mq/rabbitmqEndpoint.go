@@ -126,17 +126,10 @@ func (s *RabbitMQEndpoint) ExchangeMap() *map[string]*ExchangeConfig {
 	return s.exchangeMap
 }
 func (s *RabbitMQEndpoint) StartConsumer() {
-	go func() {
-		defer func() {
-			if r := recover(); r != nil {
-				logx.Errorf("StartConsumer err:%v", r)
-			}
-		}()
-		for _, f := range *s.consumerList {
-			//启动消费者
-			f()
-		}
-	}()
+	for _, f := range *s.consumerList {
+		//启动消费者
+		go f()
+	}
 }
 func (s *RabbitMQEndpoint) ConsumeMessages(queueName string, handler func(d amqp.Delivery) error) error {
 	if !s.IsConnected() {

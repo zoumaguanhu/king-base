@@ -38,4 +38,18 @@ type MsgEmail struct {
 	MailContent *mail.Email    `json:"mailContent"`
 	MailType    int64          `json:"mailType"`
 	VirtId      int64          `json:"virtId"`
+	TraceId     string         `json:"traceId"`
+}
+type MsgCoupon struct {
+	MailConfig  *mail.MailConf `json:"mailConfig"`
+	MailContent *mail.Email    `json:"mailContent"`
+	Accounts    []string       `json:"accounts"`
+	IsHtml      bool           `json:"isHtml"`
+	MailType    int64          `json:"mailType"`
+	VirtId      int64          `json:"virtId"`
+	PId         int64          `json:"pId"` //券ID
+	ACode       string         `json:"aId"` //活动ID
+	IssueUserId int64          `json:"issueUserId"`
+	TraceId     string         `json:"traceId"`
+	IsSendMail  bool           `json:"isSendMail"`
 }

@@ -5,11 +5,17 @@ import (
 )
 
 type MailConf struct {
-	Host     string
-	Port     int
-	Username string
-	Password string
-	SSL      bool
+	Host            string `json:"host"`
+	Port            int    `json:"port"`
+	Username        string `json:"userName"`
+	Password        string `json:"password"`
+	SSL             bool   `json:"ssl"`
+	WorkerNum       int    `json:"workerNum"`
+	JobQueue        int    `json:"jobQueue"`
+	WaitTimeOut     int    `json:"waitTimeOut"`
+	RetryCount      int    `json:"retryCount"`
+	MaxCountPerDay  int    `json:"maxCountPerDay"`
+	MaxCountPerFile int    `json:"maxCountPerFile"`
 }
 type MailEndpoint struct {
 	mailConf *MailConf
@@ -26,6 +32,12 @@ func New(c *MailConf) *MailEndpoint {
 	dialer.SSL = c.SSL
 
 	return &MailEndpoint{mailConf: c, dialer: dialer}
+}
+func (s *MailEndpoint) GetConfig() *MailConf {
+	return s.mailConf
+}
+func (s *MailEndpoint) GetDialer() *gomail.Dialer {
+	return s.dialer
 }
 
 type Email struct {

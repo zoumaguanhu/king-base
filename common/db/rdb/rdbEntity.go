@@ -30,6 +30,11 @@ type SiteInfo struct {
 type SiteStat struct {
 	Count int64 `json:"count"`
 }
+type SiteFileLimit struct {
+	Count           int64 `json:"count"`
+	MaxCountPerDay  int64 `json:"maxCountPerDay"`
+	MaxCountPerFile int64 `json:"maxCountPerFile"`
+}
 
 type BannerInfo struct {
 	Id         int64  `json:"id"`

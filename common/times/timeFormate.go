@@ -84,6 +84,7 @@ func DateStrToStartTime(dateStr string) (time.Time, error) {
 	}
 	return DateTimeToStartTime(&toTime), nil
 }
+
 func DateToFutureDate(d int64) *time.Time {
 	n := time.Now()
 	f := n.AddDate(0, 0, int(d))
@@ -145,4 +146,15 @@ func PreviousDate() string {
 	yesterday := now.AddDate(0, 0, -1)
 
 	return yesterday.Format(DATE) // Go的参考时间格式
+}
+func CurrentDayLastTime() int64 {
+	now := time.Now()
+
+	// 设置目标时间为当天的23点59分59秒
+	targetTime := time.Date(now.Year(), now.Month(), now.Day(), 23, 59, 59, 0, now.Location())
+
+	// 计算时间差
+	diff := targetTime.Sub(now)
+
+	return int64(diff.Seconds())
 }

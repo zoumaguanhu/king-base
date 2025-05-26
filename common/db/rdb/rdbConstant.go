@@ -14,6 +14,7 @@ const (
 	PRODUCT_HASH = "product_hash"
 	PRODUCT_SET  = "product_set"
 	BANNER       = "banner"
+	FILE_LIMIT   = "file_limit"
 )
 const (
 	STAT_PV   = "pv"
