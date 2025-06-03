@@ -2,7 +2,9 @@ package nums
 
 import (
 	"king.com/king/base/common/constants"
+	"king.com/king/base/common/strs"
 	"strconv"
+	"strings"
 )
 
 func IsDefault(num int64) bool {
@@ -58,4 +60,16 @@ func FloatIsDefault(num float64) bool {
 }
 func FloatToStr(f float64) string {
 	return strconv.FormatFloat(f, 'f', 2, 64)
+}
+func SplitPrice(price string) (string, string, string) {
+	num := strs.StrToFloat64(price)
+	numStr := strconv.FormatFloat(num, 'f', 2, 64)
+	parts := strings.Split(numStr, ".")
+	// 确保小数部分存在
+	decimalPart := constants.ZERO_ZERO
+	if len(parts) > 1 {
+		decimalPart = parts[1]
+	}
+
+	return parts[0], constants.DOT, decimalPart
 }

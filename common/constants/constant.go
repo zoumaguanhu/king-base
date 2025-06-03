@@ -26,7 +26,7 @@ const ROLE string = "role"
 const VIRT_ID string = "virtId"
 const VIRT_IDS string = "virtIds"
 const SITE_ROLE string = "sr"
-const VIRT_FLG string = "virtFlg"
+const HOST_FLG string = "hostFlg"
 const TEN_THOUSAND_64 int64 = 10000
 const TEN_THOUSAND int = 10000
 const DELIVERY_FEE string = "delivery_fee"
@@ -42,6 +42,8 @@ const (
 	FIELD_VIRT_ID  = "virt_id"
 	NOT_FOUNT_SITE = "not found site"
 )
+const ZERO_ZERO = "00"
+const DOT = "."
 const RD_SEPARATOR = ":"
 const DATE_366 int = 366
 const CG_FLG string = "cgFlg"
@@ -115,3 +117,7 @@ const (
 const (
 	COMMAND_TYPE_UPDATE = "update"
 )
+
+type Virt struct {
+	VirtId int64 `json:"virtId"`
+}

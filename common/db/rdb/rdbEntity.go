@@ -22,9 +22,9 @@ type SiteInfo struct {
 	SiteMeta     string `json:"siteMeta"`
 	Status       int64  `json:"status"`
 	Zone         int64  `json:"zone"`
-	SiteTemplate int64  `json:"siteTemplate"`
+	SiteTemplate string `json:"siteTemplate"`
 	ExpTime      string `json:"expTime"`
-	Lang         int64  `json:"lang"`
+	Lang         string `json:"lang"`
 	BuildTime    string `json:"buildTime"`
 }
 type SiteStat struct {
