@@ -55,6 +55,14 @@ const MD5 = "md5"
 const EXP = "exp"
 const IAT = "iat"
 const (
+	PRODUCT_SKU_ERROR = 300111
+)
+const (
+	P_LEVEL_1 = 1
+	P_LEVEL_2 = 2
+	P_LEVEL_3 = 3
+)
+const (
 	STATUS_1 int64 = 1
 	STATUS_2 int64 = 2
 	STATUS_3 int64 = 3

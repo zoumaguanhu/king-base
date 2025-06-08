@@ -15,6 +15,14 @@ const (
 	PRODUCT_SET  = "product_set"
 	BANNER       = "banner"
 	FILE_LIMIT   = "file_limit"
+	MAIL_CODE    = "mail_code"
+	ADMIN_CLIENT = "admin_client"
+	ADMIN_CODE   = "admin_code"
+)
+const (
+	PRODUCT_SKU_KEY    = "site:vsite:%v:product:detail:%v:product_skus"
+	PRODUCT_IMG_KEY    = "site:vsite:%v:product:detail:%v:product_imgs"
+	PRODUCT_REVIEW_KEY = "site:vsite:%v:product:detail:%v:product_review"
 )
 const (
 	STAT_PV   = "pv"
@@ -40,6 +48,13 @@ const (
 )
 
 // user缓存bz关键字
+const (
+	ADMIN_CODE_EXP          int64 = 300
+	ADMIN_LOGIN_REPEAT_EXP  int64 = 1
+	ADMIN_LOGIN_RETRY_COUNT int64 = 2
+	ADMIN_CODE_RETRY_EXP    int64 = 50
+	ADMIN_CODE_RETRY_COUNT  int64 = 2
+)
 const (
 	USER_INFO            string = "user_info"
 	USER_TEMP            string = "user_temp"

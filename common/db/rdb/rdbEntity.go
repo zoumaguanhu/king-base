@@ -42,3 +42,7 @@ type BannerInfo struct {
 	RouteToUrl string `json:"routeToUrl"`
 	BSort      int64  `json:"BSort"`
 }
+type MailCode struct {
+	Code      string `json:"code"`
+	BuildTime int64  `json:"buildTime"`
+}

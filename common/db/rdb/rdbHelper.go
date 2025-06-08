@@ -166,17 +166,23 @@ func (m *RedisManger) addProductScript() *string {
 	script := `
 	local k = KEYS[1]
 	local id = KEYS[2]
+	
 	local k1 = k .. '_hash' 
 	local k2 = k .. '_set' 
+	local k3 = KEYS[3]
 	
 	local sortScore = ARGV[1]
 	local productData = ARGV[2]
+	local detailData = ARGV[3]
 	
 	-- 更新Hash
 	redis.call('HSET', k1, id, productData)
 	
 	-- 更新ZSet索引
 	redis.call('ZADD', k2, sortScore, id)
+
+	-- 更新详情
+	redis.call('SET', k3, detailData)
 	
 	return 1
 	`
@@ -189,9 +195,10 @@ func (m *RedisManger) delProductScript() *string {
 	local k2 = k .. '_set'
 	local zsetResult = redis.call('ZREM', k2, ARGV[1])
    	local hashResult = redis.call('HDEL', k1, ARGV[1])
+   	local detaulResult = redis.call('DEL', KEYS[2])
     
  
-    return {zsetResult, hashResult}`
+    return {zsetResult, hashResult,detaulResult}`
 	return &script
 }
 func (m *RedisManger) bannerListScript() *string {

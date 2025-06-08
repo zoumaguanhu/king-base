@@ -65,6 +65,10 @@ func GenAcCodeStr() string {
 	s := gt.generateRandomAlphanumeric(12)
 	return strings.ToUpper(s)
 }
+func GenMailCodeStr() string {
+	s := gt.generateRandomAlphanumeric(6)
+	return s
+}
 func GenPromoteCodeStr() string {
 	s := gt.generateRandomAlphanumeric(8)
 	return strings.ToUpper(s)

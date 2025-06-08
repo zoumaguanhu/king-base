@@ -13,3 +13,8 @@ const (
 	ACTIVE_ITEM     string = "active_item"
 	MARKETING       string = "marketing"
 )
+
+type PayMethod struct {
+	PrefixLab string `json:"prefixLab"`
+	SuffixLab string `json:"suffixLab"`
+}

@@ -43,11 +43,11 @@ func (r *RdbBaseImpl) BuildSiteKey(virtId int64, bz string) string {
 	return s
 }
 func (r *RdbBaseImpl) BuildBannerKey(virtId int64, bz string) string {
-	s := fmt.Sprintf("site:vsite:%v:%v", virtId, bz)
+	s := fmt.Sprintf("site:vsite:%v:product:banner:%v", virtId, bz)
 	return s
 }
 func (r *RdbBaseImpl) BuildSiteProductKey(virtId int64, bz string) string {
-	s := fmt.Sprintf("site:vsite:%v:page:%v", virtId, bz)
+	s := fmt.Sprintf("site:vsite:%v:product:page:%v", virtId, bz)
 	return s
 }
 func (r *RdbBaseImpl) BuildUserKey(virtId int64, userId int64, bz string) string {
@@ -106,6 +106,10 @@ func (m *RedisManger) Mode(tp interface{}) *RedisManger {
 }
 func (m *RedisManger) WithKey(key, bz string) *RedisManger {
 	m.k = m.BuildKey(key, bz)
+	return m
+}
+func (m *RedisManger) WithCustomKey(key string) *RedisManger {
+	m.k = key
 	return m
 }
 func (m *RedisManger) WithSiteKey(virtId int64, bz string) *RedisManger {
@@ -357,12 +361,12 @@ func (m *RedisManger) ProductPageScriptResult(start int64, end int64) (bool, int
 	logc.Infof(m.ctx, "AddProductScriptResult info:%v", v)
 	return true, v
 }
-func (m *RedisManger) AddProductScriptResult(data any, sort int64, id string) (bool, int) {
+func (m *RedisManger) AddProductScriptResult(data any, sort int64, id string, dKey string, dData string) (bool, int) {
 	if !m.validKey() {
 		return false, 0
 	}
 	d := strs.ObjToStr(data)
-	v, err := m.R.client.Eval(context.Background(), *m.addProductScript(), []string{m.k, id}, sort, d).Int()
+	v, err := m.R.client.Eval(context.Background(), *m.addProductScript(), []string{m.k, id, dKey}, sort, d, dData).Int()
 	if err != nil {
 		logc.Errorf(m.ctx, "AddProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
@@ -370,11 +374,11 @@ func (m *RedisManger) AddProductScriptResult(data any, sort int64, id string) (b
 	logc.Errorf(m.ctx, "AddProductScriptResult info:%v", v)
 	return true, v
 }
-func (m *RedisManger) DelProductScriptResult(id string) (bool, interface{}) {
+func (m *RedisManger) DelProductScriptResult(id, dKey string) (bool, interface{}) {
 	if !m.validKey() {
 		return false, 0
 	}
-	v, err := m.R.client.Eval(context.Background(), *m.delProductScript(), []string{m.k}, id).Result()
+	v, err := m.R.client.Eval(context.Background(), *m.delProductScript(), []string{m.k, dKey}, id).Result()
 	if err != nil {
 		logx.Errorf("DelProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0

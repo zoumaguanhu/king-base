@@ -15,7 +15,10 @@ const (
 	SYS     = "sys"
 	COUPONE = "coupon"
 )
+
+// CommandType类型
 const (
 	RESET_PASSWD_COMMAND = "reset_passwd"
 	ISSUE_COUPON_COMMAND = "issue_coupon"
+	MAIL_CODE_COMMAND    = "mail_code"
 )
