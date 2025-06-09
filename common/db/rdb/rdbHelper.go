@@ -247,3 +247,60 @@ func (m *RedisManger) delBannerScript() *string {
     return 1`
 	return &script
 }
+
+func (m *RedisManger) CartPageScript() *string {
+	script := `-- 获取总数量
+		local k = KEYS[1]
+		local k1= k .. '_set'
+		local k2= k .. '_hash'
+		local total = redis.call('ZCARD',k1)
+		-- 获取分页的产品ID列表
+		local productIDs = redis.call('ZREVRANGE', k1, ARGV[1], ARGV[2])
+	
+		-- 批量获取产品详情
+		local products = redis.call('HMGET',k2, unpack(productIDs))
+		
+		return {total, products} `
+	return &script
+}
+func (m *RedisManger) addCartScript() *string {
+	script := `
+	local k = KEYS[1]
+	local combId = KEYS[2]
+	local expireTime = tonumber(ARGV[3])  -- 超时时间（秒）
+	
+	local k1 = k .. '_hash' 
+	local k2 = k .. '_set'
+	
+	local sortScore = ARGV[1]
+	local cartData = ARGV[2]
+	
+	-- 更新Hash
+	redis.call('HSET', k1, combId, cartData)
+
+	-- 为Hash设置超时时间
+	redis.call('EXPIRE', k1, expireTime)
+	
+	-- 更新ZSet索引
+	redis.call('ZADD', k2, sortScore, combId)
+
+	-- 为Sorted Set设置超时时间
+	redis.call('EXPIRE', k2, expireTime)
+	
+	return 1
+	`
+	return &script
+}
+func (m *RedisManger) delCartScript() *string {
+	script := `
+	local k = KEYS[1]
+	local k1 = k .. '_hash'
+	local k2 = k .. '_set'
+	local zsetResult = redis.call('ZREM', k2, ARGV[1])
+   	local hashResult = redis.call('HDEL', k1, ARGV[1])
+   	local delResult = redis.call('DEL', KEYS[2])
+    
+ 
+    return {zsetResult, hashResult,delResult}`
+	return &script
+}

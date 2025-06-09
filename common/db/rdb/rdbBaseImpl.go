@@ -54,6 +54,7 @@ func (r *RdbBaseImpl) BuildUserKey(virtId int64, userId int64, bz string) string
 	s := fmt.Sprintf("site:virtId:%v:userId:%v:%v", virtId, userId, bz)
 	return s
 }
+
 func (r *RdbBaseImpl) BuildEmailKey(virtId int64, email string, bz string) string {
 	s := fmt.Sprintf("site:virtId:%v:email:%v:%v", virtId, email, bz)
 	return s
@@ -128,6 +129,7 @@ func (m *RedisManger) WithAdminKey(admin, bz string) *RedisManger {
 	m.k = m.BuildAdminKey(admin, bz)
 	return m
 }
+
 func (m *RedisManger) WithClientKey(host, client, bz string) *RedisManger {
 	m.k = m.BuildClientKey(host, client, bz)
 	return m
@@ -295,7 +297,7 @@ func (m *RedisManger) HQueryResultVal() interface{} {
 	}
 	s := m.R.HGet(m.k, m.f)
 	if strs.IsDefault(s) {
-		return m.tp
+		return nil
 	}
 	m.v = &s
 
@@ -355,10 +357,10 @@ func (m *RedisManger) ProductPageScriptResult(start int64, end int64) (bool, int
 	}
 	v, err := m.R.client.Eval(context.Background(), *m.ProductPageScript(), []string{m.k}, start, end).Result()
 	if err != nil {
-		logc.Errorf(m.ctx, "AddProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		logc.Errorf(m.ctx, "ProductPageScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
-	logc.Infof(m.ctx, "AddProductScriptResult info:%v", v)
+	logc.Infof(m.ctx, "ProductPageScriptResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) AddProductScriptResult(data any, sort int64, id string, dKey string, dData string) (bool, int) {
@@ -435,4 +437,42 @@ func (m *RedisManger) GetInt(ms *map[string]string, f string) int64 {
 		return strs.StrsToInt64(c)
 	}
 	return 0
+}
+
+func (m *RedisManger) CartPageScriptResult(start int64, end int64) (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.CartPageScript(), []string{m.k}, start, end).Result()
+	if err != nil {
+		logc.Errorf(m.ctx, "CartPageScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	logc.Infof(m.ctx, "CartPageScriptResult info:%v", v)
+	return true, v
+}
+func (m *RedisManger) AddCartScriptResult(data any, sort int64, combId string) (bool, int) {
+	if !m.validKey() {
+		return false, 0
+	}
+	d := strs.ObjToStr(data)
+	v, err := m.R.client.Eval(context.Background(), *m.addCartScript(), []string{m.k, combId}, sort, d, m.t).Int()
+	if err != nil {
+		logc.Errorf(m.ctx, "AddCartScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	logc.Errorf(m.ctx, "AddCartScriptResult info:%v", v)
+	return true, v
+}
+func (m *RedisManger) DelCartScriptResult(combId string) (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.delCartScript(), []string{m.k}, combId).Result()
+	if err != nil {
+		logx.Errorf("DelProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	logc.Errorf(m.ctx, "DelProductScriptResult info:%v", v)
+	return true, v
 }

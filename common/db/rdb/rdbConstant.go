@@ -9,6 +9,7 @@ const (
 	SITE         = "v_site_info"
 	HOST         = "host"
 	CLIENT       = "client"
+	CART         = "cart"
 	STAT         = "stat"
 	PRODUCT      = "product"
 	PRODUCT_HASH = "product_hash"
@@ -20,6 +21,7 @@ const (
 	ADMIN_CODE   = "admin_code"
 )
 const (
+	PRODUCT_KEY        = "site:vsite:%v:product:page:product_hash"
 	PRODUCT_SKU_KEY    = "site:vsite:%v:product:detail:%v:product_skus"
 	PRODUCT_IMG_KEY    = "site:vsite:%v:product:detail:%v:product_imgs"
 	PRODUCT_REVIEW_KEY = "site:vsite:%v:product:detail:%v:product_review"
