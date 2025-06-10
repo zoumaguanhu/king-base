@@ -14,6 +14,7 @@ type MsgBody struct {
 	Bz          string `json:"bz"`
 	MsgContent  string `json:"msgContent"`
 	VirtId      int64  `json:"virtId"`
+	PublishId   int64  `json:"publishId"`
 }
 type MsgStruct struct {
 	Header *MsgHeader
@@ -52,4 +53,13 @@ type MsgCoupon struct {
 	IssueUserId int64          `json:"issueUserId"`
 	TraceId     string         `json:"traceId"`
 	IsSendMail  bool           `json:"isSendMail"`
+}
+type CartInfo struct {
+	Id         int64 `json:"id"`     // id
+	PId        int64 `json:"pId"`    // p_id
+	PCount     int64 `json:"pCount"` // p_count
+	Status     int64 `json:"status"` // status
+	SkuId      int64 `json:"skuId"`
+	SkuChildId int64 `json:"skuChildId"`
+	MId        int64 `json:"MId"`
 }
