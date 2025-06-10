@@ -51,12 +51,12 @@ func (r *RdbBaseImpl) BuildSiteProductKey(virtId int64, bz string) string {
 	return s
 }
 func (r *RdbBaseImpl) BuildUserKey(virtId int64, userId int64, bz string) string {
-	s := fmt.Sprintf("site:virtId:%v:userId:%v:%v", virtId, userId, bz)
+	s := fmt.Sprintf("site:vsite:%v:member:%v:%v", virtId, userId, bz)
 	return s
 }
 
 func (r *RdbBaseImpl) BuildEmailKey(virtId int64, email string, bz string) string {
-	s := fmt.Sprintf("site:virtId:%v:email:%v:%v", virtId, email, bz)
+	s := fmt.Sprintf("site:vsite:%v:email:%v:%v", virtId, email, bz)
 	return s
 }
 func (r *RdbBaseImpl) BuildCache(k string, v interface{}) {
@@ -456,7 +456,7 @@ func (m *RedisManger) AddCartScriptResult(data any, sort int64, combId string) (
 		return false, 0
 	}
 	d := strs.ObjToStr(data)
-	v, err := m.R.client.Eval(context.Background(), *m.addCartScript(), []string{m.k, combId}, sort, d, m.t).Int()
+	v, err := m.R.client.Eval(context.Background(), *m.addCartScript(), []string{m.k, combId}, sort, d, m.formatSec(*m.t)).Int()
 	if err != nil {
 		logc.Errorf(m.ctx, "AddCartScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0

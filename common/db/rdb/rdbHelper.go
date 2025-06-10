@@ -254,13 +254,13 @@ func (m *RedisManger) CartPageScript() *string {
 		local k1= k .. '_set'
 		local k2= k .. '_hash'
 		local total = redis.call('ZCARD',k1)
-		-- 获取分页的产品ID列表
+		-- 获取分页的cart combId 列表
 		local productIDs = redis.call('ZREVRANGE', k1, ARGV[1], ARGV[2])
 	
-		-- 批量获取产品详情
-		local products = redis.call('HMGET',k2, unpack(productIDs))
+		-- 批量获取cart详情
+		local carts = redis.call('HMGET',k2, unpack(productIDs))
 		
-		return {total, products} `
+		return {total, carts} `
 	return &script
 }
 func (m *RedisManger) addCartScript() *string {
@@ -298,9 +298,7 @@ func (m *RedisManger) delCartScript() *string {
 	local k2 = k .. '_set'
 	local zsetResult = redis.call('ZREM', k2, ARGV[1])
    	local hashResult = redis.call('HDEL', k1, ARGV[1])
-   	local delResult = redis.call('DEL', KEYS[2])
-    
  
-    return {zsetResult, hashResult,delResult}`
+    return {zsetResult, hashResult}`
 	return &script
 }
