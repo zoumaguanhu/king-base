@@ -476,3 +476,15 @@ func (m *RedisManger) DelCartScriptResult(combId string) (bool, interface{}) {
 	logc.Errorf(m.ctx, "DelProductScriptResult info:%v", v)
 	return true, v
 }
+func (m *RedisManger) DelUserCartScriptResult() (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.delUserCartScript(), []string{m.k}).Result()
+	if err != nil {
+		logx.Errorf("DelUserCartScriptResult key:%v, err:%v", m.k,  err)
+		return false, 0
+	}
+	logc.Errorf(m.ctx, "DelUserCartScriptResult info:%v", v)
+	return true, v
+}

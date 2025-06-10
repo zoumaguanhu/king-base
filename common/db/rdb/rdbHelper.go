@@ -266,12 +266,18 @@ func (m *RedisManger) CartPageScript() *string {
 func (m *RedisManger) addCartScript() *string {
 	script := `
 	local k = KEYS[1]
-	local combId = KEYS[2]
-	local expireTime = tonumber(ARGV[3])  -- 超时时间（秒）
+	
+	
 	
 	local k1 = k .. '_hash' 
 	local k2 = k .. '_set'
-	
+	local count = redis.call('ZCARD', k2)
+	if count >= 50 then
+		return 2
+	end
+
+	local combId = KEYS[2]
+	local expireTime = tonumber(ARGV[3])  -- 超时时间（秒）
 	local sortScore = ARGV[1]
 	local cartData = ARGV[2]
 	
@@ -298,6 +304,17 @@ func (m *RedisManger) delCartScript() *string {
 	local k2 = k .. '_set'
 	local zsetResult = redis.call('ZREM', k2, ARGV[1])
    	local hashResult = redis.call('HDEL', k1, ARGV[1])
+ 
+    return {zsetResult, hashResult}`
+	return &script
+}
+func (m *RedisManger) delUserCartScript() *string {
+	script := `
+	local k = KEYS[1]
+	local k1 = k .. '_hash'
+	local k2 = k .. '_set'
+	local zsetResult = redis.call('DEL', k2)
+   	local hashResult = redis.call('DEL', k1)
  
     return {zsetResult, hashResult}`
 	return &script

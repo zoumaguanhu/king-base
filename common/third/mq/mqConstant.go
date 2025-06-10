@@ -11,7 +11,7 @@ const (
 // bz类型
 const (
 	PRODUCT_BZ = "product_bz"
-	SITE_BZ    = "site"
+	SITE_BZ    = "site_bz"
 	BANNER_BZ  = "banner_bz"
 	SYS_BZ     = "sys_bz"
 	COUPONE_BZ = "coupon_bz"
@@ -20,11 +20,14 @@ const (
 
 // CommandType类型
 const (
-	COMMAND_TYPE_UPDATE  = "update_command"
-	RESET_PASSWD_COMMAND = "reset_passwd_command"
-	ISSUE_COUPON_COMMAND = "issue_coupon_command"
-	MAIL_CODE_COMMAND    = "mail_code_command"
-	CART_ADD_COMMAND     = "cart_add_command"
-	CART_EDIT_COMMAND    = "cart_edit_command"
-	CART_DEL_COMMAND     = "cart_del_command"
+	PRODUCT_UPDATE_COMMAND = "product_update_command"
+	BANNER_UPDATE_COMMAND  = "banner_update_command"
+	SITE_UPDATE_COMMAND    = "site_update_command"
+	RESET_PASSWD_COMMAND   = "reset_passwd_command"
+	ISSUE_COUPON_COMMAND   = "issue_coupon_command"
+	MAIL_CODE_COMMAND      = "mail_code_command"
+	CART_ADD_COMMAND       = "cart_add_command"
+	CART_EDIT_COMMAND      = "cart_edit_command"
+	CART_DEL_COMMAND       = "cart_del_command"
+	CART_REFRESH_COMMAND   = "cart_refresh_command"
 )
