@@ -1,6 +1,8 @@
 package mq
 
-import "king.com/king/base/common/third/mail"
+import (
+	"king.com/king/base/common/third/mail"
+)
 
 type MsgHeader struct {
 	MsgId        string `json:"msgId"`
@@ -62,4 +64,9 @@ type CartInfo struct {
 	SkuId      int64 `json:"skuId"`
 	SkuChildId int64 `json:"skuChildId"`
 	MId        int64 `json:"MId"`
+}
+type UserAction struct {
+	MId    int64  `json:"mId"`
+	VirtId int64  `json:"virtId"`
+	Exp    string `json:"exp"`
 }

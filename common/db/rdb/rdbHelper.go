@@ -266,9 +266,6 @@ func (m *RedisManger) CartPageScript() *string {
 func (m *RedisManger) addCartScript() *string {
 	script := `
 	local k = KEYS[1]
-	
-	
-	
 	local k1 = k .. '_hash' 
 	local k2 = k .. '_set'
 	local count = redis.call('ZCARD', k2)
