@@ -5,6 +5,6 @@ const CHANNEL = "Channel"
 
 // 渠道
 const (
-	CHANNEL_WEB    = 1
-	CHANNEL_MOBILE = 2
+	CHANNEL_WEB    = "1"
+	CHANNEL_MOBILE = "2"
 )

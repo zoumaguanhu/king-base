@@ -20,6 +20,9 @@ func (m *RedisManger) setEx() bool {
 func (m *RedisManger) hSetEx() bool {
 	return m.R.SetEX(m.k, *m.v, *m.t)
 }
+func (m *RedisManger) hMSet(data *map[string]interface{}) bool {
+	return m.R.HMSet(m.k, *data)
+}
 func (m *RedisManger) validMode() bool {
 	if m.tp == nil {
 		logx.Errorf("not invoke Mode fun")

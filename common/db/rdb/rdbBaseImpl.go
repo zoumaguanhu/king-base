@@ -235,17 +235,15 @@ func (m *RedisManger) HSetResult() bool {
 	return r
 }
 
-func (m *RedisManger) HMSetResult() bool {
+func (m *RedisManger) HMSetResult(data *map[string]interface{}) bool {
 	if !m.valid() {
 		return false
 	}
 	if strs.IsDefault(m.k) {
 		return false
 	}
-	if m.t != nil {
-		return m.setEx()
-	}
-	r := m.dfSet()
+
+	r := m.hMSet(data)
 	m.build = false
 	return r
 }
@@ -482,7 +480,7 @@ func (m *RedisManger) DelUserCartScriptResult() (bool, interface{}) {
 	}
 	v, err := m.R.client.Eval(context.Background(), *m.delUserCartScript(), []string{m.k}).Result()
 	if err != nil {
-		logx.Errorf("DelUserCartScriptResult key:%v, err:%v", m.k,  err)
+		logx.Errorf("DelUserCartScriptResult key:%v, err:%v", m.k, err)
 		return false, 0
 	}
 	logc.Errorf(m.ctx, "DelUserCartScriptResult info:%v", v)

@@ -17,6 +17,7 @@ type MsgBody struct {
 	MsgContent  string `json:"msgContent"`
 	VirtId      int64  `json:"virtId"`
 	PublishId   int64  `json:"publishId"`
+	IsBatch     bool   `json:"isBatch"`
 }
 type MsgStruct struct {
 	Header *MsgHeader
@@ -44,17 +45,23 @@ type MsgEmail struct {
 	TraceId     string         `json:"traceId"`
 }
 type MsgCoupon struct {
-	MailConfig  *mail.MailConf `json:"mailConfig"`
-	MailContent *mail.Email    `json:"mailContent"`
-	Accounts    []string       `json:"accounts"`
-	IsHtml      bool           `json:"isHtml"`
-	MailType    int64          `json:"mailType"`
-	VirtId      int64          `json:"virtId"`
-	PId         int64          `json:"pId"` //券ID
-	ACode       string         `json:"aId"` //活动ID
-	IssueUserId int64          `json:"issueUserId"`
-	TraceId     string         `json:"traceId"`
-	IsSendMail  bool           `json:"isSendMail"`
+	MailConfig    *mail.MailConf `json:"mailConfig"`
+	MailContent   *mail.Email    `json:"mailContent"`
+	Account       string         `json:"account"`
+	IsHtml        bool           `json:"isHtml"`
+	MailType      int64          `json:"mailType"`
+	VirtId        int64          `json:"virtId"`
+	PId           int64          `json:"pId"`    //券ID
+	AcType        string         `json:"acType"` //活动类型
+	AcCode        string         `json:"acCode"` //活动code
+	AcId          int64          `json:"acId"`
+	IssueUserId   int64          `json:"issueUserId"`
+	TraceId       string         `json:"traceId"`
+	IsSendMail    bool           `json:"isSendMail"`
+	IssueDateTime string         `json:"issueDateTime"` //发放时间
+	Amount        int64          `json:"amount"`        //消费金额字段
+	IssueType     int64          `json:"issueType"`
+	InviteCode    string         `json:"inviteCode"`
 }
 type CartInfo struct {
 	Id         int64 `json:"id"`     // id
