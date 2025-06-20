@@ -236,13 +236,12 @@ func (m *RedisManger) HSetResult() bool {
 }
 
 func (m *RedisManger) HMSetResult(data *map[string]interface{}) bool {
-	if !m.valid() {
+	if !m.validKey() {
 		return false
 	}
 	if strs.IsDefault(m.k) {
 		return false
 	}
-
 	r := m.hMSet(data)
 	m.build = false
 	return r
@@ -485,4 +484,27 @@ func (m *RedisManger) DelUserCartScriptResult() (bool, interface{}) {
 	}
 	logc.Errorf(m.ctx, "DelUserCartScriptResult info:%v", v)
 	return true, v
+}
+
+func (m *RedisManger) AddSiteAndOptionsResult(data *map[string]interface{}) bool {
+	if !m.validKey() {
+		return false
+	}
+	// 构建参数列表
+	args := make([]interface{}, 0, len(*data)*2+1)
+
+	// 展开map为键值对列表
+	for k, v := range *data {
+		args = append(args, k, v)
+	}
+
+	// 添加过期时间参数
+	args = append(args, m.formatSec(*m.t))
+	cmd := m.R.client.Eval(context.Background(), *m.hMSetExpScript(), []string{m.k}, args...)
+	if cmd.Err() != nil {
+		logc.Errorf(m.ctx, "AddSiteAndOptionsResult key:%v,field:%v, err:%v", m.k, m.f, cmd.Err())
+		return false
+	}
+	logc.Errorf(m.ctx, "AddSiteAndOptionsResult info:%+v", data)
+	return true
 }

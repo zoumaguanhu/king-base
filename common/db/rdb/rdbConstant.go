@@ -15,7 +15,7 @@ const (
 	PRODUCT_HASH = "product_hash"
 	PRODUCT_SET  = "product_set"
 	BANNER       = "banner"
-	FILE_LIMIT   = "file_limit"
+	MAIL_LIMIT   = "mail_limit"
 	MAIL_CODE    = "mail_code"
 	ADMIN_CLIENT = "admin_client"
 	ADMIN_CODE   = "admin_code"
@@ -25,6 +25,10 @@ const (
 	PRODUCT_SKU_KEY    = "site:vsite:%v:product:detail:%v:product_skus"
 	PRODUCT_IMG_KEY    = "site:vsite:%v:product:detail:%v:product_imgs"
 	PRODUCT_REVIEW_KEY = "site:vsite:%v:product:detail:%v:product_review"
+)
+const (
+	SITE_OPTIONS       = "site:vsite:%v"
+	SITE_OPTIONS_FIELD = "option_%v"
 )
 const (
 	STAT_PV   = "pv"

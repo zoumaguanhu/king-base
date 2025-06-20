@@ -21,7 +21,11 @@ func (m *RedisManger) hSetEx() bool {
 	return m.R.SetEX(m.k, *m.v, *m.t)
 }
 func (m *RedisManger) hMSet(data *map[string]interface{}) bool {
-	return m.R.HMSet(m.k, *data)
+	r := m.R.HMSet(m.k, *data)
+	if m.t != nil {
+		m.R.Expire(m.k, *m.t)
+	}
+	return r
 }
 func (m *RedisManger) validMode() bool {
 	if m.tp == nil {
@@ -317,5 +321,24 @@ func (m *RedisManger) delUserCartScript() *string {
    	local hashResult = redis.call('DEL', k1)
  
     return {zsetResult, hashResult}`
+	return &script
+}
+func (m *RedisManger) hMSetExpScript() *string {
+	script := `
+    -- 删除整个 key
+    redis.call('DEL', KEYS[1])
+    
+    -- 设置新数据
+    for i = 1, #ARGV-1, 2 do
+        redis.call('HSET', KEYS[1], ARGV[i], ARGV[i+1])
+    end
+    
+    -- 设置过期时间（秒）
+    if tonumber(ARGV[#ARGV]) > 0 then
+        redis.call('EXPIRE', KEYS[1], ARGV[#ARGV])
+    end
+    
+    return 1
+`
 	return &script
 }

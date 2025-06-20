@@ -30,7 +30,7 @@ type SiteInfo struct {
 type SiteStat struct {
 	Count int64 `json:"count"`
 }
-type SiteFileLimit struct {
+type SiteMailLimit struct {
 	Count           int64 `json:"count"`
 	MaxCountPerDay  int64 `json:"maxCountPerDay"`
 	MaxCountPerFile int64 `json:"maxCountPerFile"`

@@ -9,6 +9,7 @@ const SEP_STR string = ","
 const BEARER string = "Bearer"
 const AUTHORIZATION string = "Authorization"
 const ZERO_STR string = "0"
+const FIRST_STR string = "1"
 const ZERO_INT64 int64 = 0
 const ONE_INT64 int64 = 1
 const TEN_INT64 int64 = 10
