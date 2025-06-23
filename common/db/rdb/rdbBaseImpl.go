@@ -508,3 +508,40 @@ func (m *RedisManger) AddSiteAndOptionsResult(data *map[string]interface{}) bool
 	logc.Errorf(m.ctx, "AddSiteAndOptionsResult info:%+v", data)
 	return true
 }
+func (m *RedisManger) AddBlogScriptResult(id string, sort int64, data string, dData string) bool {
+	if !m.validKey() {
+		return false
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.addBlogScript(), []string{m.k, id}, sort, data, dData).Int()
+	if err != nil {
+		logx.Errorf("AddBlogScriptResult key:%v,sort:%v,value:%v, err:%v", m.k, sort, data, err)
+		return false
+	}
+	logc.Errorf(m.ctx, "AddBlogScriptResult info:%v", v)
+	return v > 0
+}
+
+func (m *RedisManger) BlogPageScriptResult(start int64, end int64) (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.blogPageScript(), []string{m.k}, start, end).Result()
+	if err != nil {
+		logc.Errorf(m.ctx, "BlogPageScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	logc.Infof(m.ctx, "BlogPageScriptResult info:%v", v)
+	return true, v
+}
+func (m *RedisManger) DelBlogScriptResult(id int64) bool {
+	if !m.validKey() {
+		return false
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.delBlogScript(), []string{m.k}, id).Int()
+	if err != nil {
+		logx.Errorf("DelBlogScriptResult key:%v,sort:%v err:%v", m.k, id, err)
+		return false
+	}
+	logc.Errorf(m.ctx, "DelBlogScriptResult info:%v", v)
+	return v > 0
+}

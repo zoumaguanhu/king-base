@@ -19,12 +19,14 @@ const (
 	MAIL_CODE    = "mail_code"
 	ADMIN_CLIENT = "admin_client"
 	ADMIN_CODE   = "admin_code"
+	SITE_BLOG    = "site_blog"
 )
 const (
 	PRODUCT_KEY        = "site:vsite:%v:product:page:product_hash"
 	PRODUCT_SKU_KEY    = "site:vsite:%v:product:detail:%v:product_skus"
 	PRODUCT_IMG_KEY    = "site:vsite:%v:product:detail:%v:product_imgs"
 	PRODUCT_REVIEW_KEY = "site:vsite:%v:product:detail:%v:product_review"
+	BLOG_DETAIL_KEY    = "site_blog_detail_hash"
 )
 const (
 	SITE_OPTIONS       = "site:vsite:%v"

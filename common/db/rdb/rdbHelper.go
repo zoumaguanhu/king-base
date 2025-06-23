@@ -342,3 +342,56 @@ func (m *RedisManger) hMSetExpScript() *string {
 `
 	return &script
 }
+
+func (m *RedisManger) blogPageScript() *string {
+	script := `-- 获取总数量
+		local k = KEYS[1]
+		local k1= k .. '_set'
+		local k2= k .. '_hash'
+		local total = redis.call('ZCARD',k1)
+		-- 获取分页的blog id 列表
+		local productIDs = redis.call('ZREVRANGE', k1, ARGV[1], ARGV[2])
+	
+		-- 批量获取blog内容
+		local carts = redis.call('HMGET',k2, unpack(productIDs))
+		
+		return {total, carts} `
+	return &script
+}
+func (m *RedisManger) addBlogScript() *string {
+	script := `
+	local k = KEYS[1]
+	local id = KEYS[2]
+	local k1 = k .. '_hash' 
+	local k2 = k .. '_set' 
+	local k3 = k .. '_detail_hash' 
+	
+	local sortScore = ARGV[1]
+	local data = ARGV[2]
+	local dData = ARGV[3]
+	
+	-- 更新Hash
+	redis.call('HSET', k1, id, data)
+
+	redis.call('HSET', k3, id, dData)
+	
+	-- 更新ZSet索引
+	redis.call('ZADD', k2, sortScore, id)
+	
+	return 1`
+	return &script
+}
+func (m *RedisManger) delBlogScript() *string {
+	script := `
+	local k = KEYS[1]
+	local k1 = k .. '_hash'
+	local k2 = k .. '_set'
+	local k3 = k .. '_detail_hash'
+	local zsetResult = redis.call('ZREM', k2, ARGV[1])
+	local detailResult = redis.call('ZREM', k3, ARGV[1])
+   	local hashResult = redis.call('HDEL', k1, ARGV[1])
+    
+ 
+    return 1`
+	return &script
+}

@@ -46,3 +46,16 @@ type MailCode struct {
 	Code      string `json:"code"`
 	BuildTime int64  `json:"buildTime"`
 }
+type ContentSimpleTp struct {
+	Id          int64  `json:"id"`
+	Title       string `json:"title"`
+	PublishTime string `json:"publishTime"`
+	VirtId      int64  `json:"virtId"`
+}
+type ContentDetailTp struct {
+	Id          int64  `json:"id"`
+	Title       string `json:"title"`
+	Content     string `json:"content"`
+	PublishTime string `json:"publishTime"`
+	VirtId      int64  `json:"virtId"`
+}

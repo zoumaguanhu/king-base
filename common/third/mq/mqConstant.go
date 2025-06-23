@@ -18,6 +18,7 @@ const (
 	COUPONE_BZ     = "coupon_bz"
 	CART_BZ        = "cart_bz"
 	USER_ACTION_BZ = "user_action_bz"
+	CONTENT_TP_BZ  = "content_tp_bz"
 )
 
 // CommandType类型
@@ -36,4 +37,5 @@ const (
 	CART_REFRESH_COMMAND           = "cart_refresh_command"
 	USER_REGISTER_COMMAND          = "user_register_command"
 	USER_SIGN_IN_COMMAND           = "user_sign_in_command"
+	CONTENT_TP_UPDATE_COMMAND      = "content_tp_update_command"
 )
