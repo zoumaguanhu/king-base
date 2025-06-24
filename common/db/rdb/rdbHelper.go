@@ -350,12 +350,12 @@ func (m *RedisManger) blogPageScript() *string {
 		local k2= k .. '_hash'
 		local total = redis.call('ZCARD',k1)
 		-- 获取分页的blog id 列表
-		local productIDs = redis.call('ZREVRANGE', k1, ARGV[1], ARGV[2])
+		local ids = redis.call('ZREVRANGE', k1, ARGV[1], ARGV[2])
 	
 		-- 批量获取blog内容
-		local carts = redis.call('HMGET',k2, unpack(productIDs))
+		local blogs = redis.call('HMGET',k2, unpack(ids))
 		
-		return {total, carts} `
+		return {total, blogs} `
 	return &script
 }
 func (m *RedisManger) addBlogScript() *string {
@@ -364,7 +364,7 @@ func (m *RedisManger) addBlogScript() *string {
 	local id = KEYS[2]
 	local k1 = k .. '_hash' 
 	local k2 = k .. '_set' 
-	local k3 = k .. '_detail_hash' 
+	local k3 = KEYS[3] 
 	
 	local sortScore = ARGV[1]
 	local data = ARGV[2]
@@ -386,12 +386,19 @@ func (m *RedisManger) delBlogScript() *string {
 	local k = KEYS[1]
 	local k1 = k .. '_hash'
 	local k2 = k .. '_set'
-	local k3 = k .. '_detail_hash'
+	local k3 = KEYS[2]
 	local zsetResult = redis.call('ZREM', k2, ARGV[1])
-	local detailResult = redis.call('ZREM', k3, ARGV[1])
    	local hashResult = redis.call('HDEL', k1, ARGV[1])
+	local detailResult = redis.call('HDEL', k3, ARGV[1])
     
  
     return 1`
+	return &script
+}
+func (m *RedisManger) zSetCountScript() *string {
+	script := `
+		local count = redis.call('ZCARD', KEYS[1])
+		return count
+	`
 	return &script
 }

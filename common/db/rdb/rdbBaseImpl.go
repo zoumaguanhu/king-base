@@ -319,6 +319,18 @@ func (m *RedisManger) HDelResult() bool {
 	}
 	return m.R.HDel(m.k, m.f)
 }
+func (m *RedisManger) ZCountResult() (int, bool) {
+	if !m.validKey() {
+		return 0, false
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.zSetCountScript(), []string{m.k}).Int()
+	if err != nil {
+		logc.Errorf(m.ctx, "StatIncr key:%v,field:%v, err:%v", m.k, m.f, err)
+		return 0, false
+	}
+	logc.Infof(m.ctx, "StatScriptExpResult info:%v", v)
+	return v, true
+}
 
 func (m *RedisManger) RunScriptResult(script string) interface{} {
 	r := m.R.client.Eval(context.Background(), script, []string{m.k}, m.f, *m.v).Val()
@@ -508,11 +520,11 @@ func (m *RedisManger) AddSiteAndOptionsResult(data *map[string]interface{}) bool
 	logc.Errorf(m.ctx, "AddSiteAndOptionsResult info:%+v", data)
 	return true
 }
-func (m *RedisManger) AddBlogScriptResult(id string, sort int64, data string, dData string) bool {
+func (m *RedisManger) AddBlogScriptResult(id string, detailKey string, sort int64, data string, dData string) bool {
 	if !m.validKey() {
 		return false
 	}
-	v, err := m.R.client.Eval(context.Background(), *m.addBlogScript(), []string{m.k, id}, sort, data, dData).Int()
+	v, err := m.R.client.Eval(context.Background(), *m.addBlogScript(), []string{m.k, id, detailKey}, sort, data, dData).Int()
 	if err != nil {
 		logx.Errorf("AddBlogScriptResult key:%v,sort:%v,value:%v, err:%v", m.k, sort, data, err)
 		return false
@@ -533,11 +545,11 @@ func (m *RedisManger) BlogPageScriptResult(start int64, end int64) (bool, interf
 	logc.Infof(m.ctx, "BlogPageScriptResult info:%v", v)
 	return true, v
 }
-func (m *RedisManger) DelBlogScriptResult(id int64) bool {
+func (m *RedisManger) DelBlogScriptResult(id int64, detailKey string) bool {
 	if !m.validKey() {
 		return false
 	}
-	v, err := m.R.client.Eval(context.Background(), *m.delBlogScript(), []string{m.k}, id).Int()
+	v, err := m.R.client.Eval(context.Background(), *m.delBlogScript(), []string{m.k, detailKey}, id).Int()
 	if err != nil {
 		logx.Errorf("DelBlogScriptResult key:%v,sort:%v err:%v", m.k, id, err)
 		return false

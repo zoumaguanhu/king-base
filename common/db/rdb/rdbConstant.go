@@ -19,14 +19,17 @@ const (
 	MAIL_CODE    = "mail_code"
 	ADMIN_CLIENT = "admin_client"
 	ADMIN_CODE   = "admin_code"
-	SITE_BLOG    = "site_blog"
+	SITE_BLOG    = "blog"
 )
 const (
-	PRODUCT_KEY        = "site:vsite:%v:product:page:product_hash"
-	PRODUCT_SKU_KEY    = "site:vsite:%v:product:detail:%v:product_skus"
-	PRODUCT_IMG_KEY    = "site:vsite:%v:product:detail:%v:product_imgs"
-	PRODUCT_REVIEW_KEY = "site:vsite:%v:product:detail:%v:product_review"
-	BLOG_DETAIL_KEY    = "site_blog_detail_hash"
+	PRODUCT_KEY          = "site:vsite:%v:product:page:product_hash"
+	PRODUCT_SKU_KEY      = "site:vsite:%v:product:detail:%v:product_skus"
+	PRODUCT_IMG_KEY      = "site:vsite:%v:product:detail:%v:product_imgs"
+	PRODUCT_REVIEW_KEY   = "site:vsite:%v:product:detail:%v:product_review"
+	BLOG_PAGE_HASH_KEY   = "site:vsite:%v:blog:page:blog_hash"
+	BLOG_PAGE_SET_KEY    = "site:vsite:%v:blog:page:blog_set"
+	BLOG_PAGE_PREFIX_KEY = "site:vsite:%v:blog:page:blog"
+	BLOG_DETAIL_KEY      = "site:vsite:%v:blog:detail:blog_hash"
 )
 const (
 	SITE_OPTIONS       = "site:vsite:%v"

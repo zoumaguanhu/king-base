@@ -59,3 +59,9 @@ type ContentDetailTp struct {
 	PublishTime string `json:"publishTime"`
 	VirtId      int64  `json:"virtId"`
 }
+type ContentTpLimit struct {
+	ContentType  int64 `json:"contentType"`
+	CreateLimit  int64 `json:"createLimit"`
+	PublishLimit int64 `json:"publishLimit"`
+	Status       int64 `json:"status"`
+}
