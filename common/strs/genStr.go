@@ -58,15 +58,21 @@ func GenStr(l int) string {
 func GenSnStr() string {
 	return gt.generateRandomAlphanumeric(32)
 }
+func GenXCodeStr() string {
+	return gt.generateRandomAlphanumeric(24)
+}
+func GenInviteCodeStr() string {
+	return gt.generateRandomAlphanumeric(12)
+}
 func GenMsgIdStr() string {
 	return gt.generateRandomAlphanumeric(32)
 }
 func GenAcCodeStr() string {
-	s := gt.generateRandomAlphanumeric(12)
-	return strings.ToUpper(s)
+	s := gt.generateRandomAlphanumeric(8)
+	return s
 }
 func GenMailCodeStr() string {
-	s := gt.generateRandomAlphanumeric(6)
+	s := gt.generateRandomAlphanumeric(4)
 	return s
 }
 func GenPromoteCodeStr() string {

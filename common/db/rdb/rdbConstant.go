@@ -4,6 +4,7 @@ import "time"
 
 const (
 	CLIENT_STAT_PV = "stat_pv"
+	CLIENT_XCODE   = "x_code"
 )
 const (
 	SITE         = "v_site_info"
@@ -30,8 +31,11 @@ const (
 	BLOG_PAGE_SET_KEY    = "site:vsite:%v:blog:page:blog_set"
 	BLOG_PAGE_PREFIX_KEY = "site:vsite:%v:blog:page:blog"
 	BLOG_DETAIL_KEY      = "site:vsite:%v:blog:detail:blog_hash"
+	ACCOUNT_CODE_KEY     = "site:vsite:%v:code:account:%v"
 )
 const (
+	STAT_FIELD_XCODE   = "platform:%v:xCode:%v:%v"
+	STAT_FIELDE        = "platform:%v:%v"
 	SITE_OPTIONS       = "site:vsite:%v"
 	SITE_OPTIONS_FIELD = "option_%v"
 )
@@ -41,8 +45,8 @@ const (
 	SYNC_TIME = "sync_time"
 )
 const (
-	STAT_TYPE_1 int64 = 1
-	STAT_TYPE_2 int64 = 2
+	STAT_TYPE_1 int64 = 1 //uv
+	STAT_TYPE_2 int64 = 2 //pv
 	STAT_TYPE_3 int64 = 3
 	STAT_TYPE_4 int64 = 4
 )

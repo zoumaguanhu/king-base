@@ -48,6 +48,7 @@ const DOT = "."
 const RD_SEPARATOR = ":"
 const DATE_366 int = 366
 const CG_FLG string = "cgFlg"
+const X_CODE = "xCode"
 
 // 双引号空
 const EMPTY_STRING = ""
@@ -129,4 +130,12 @@ const (
 
 type Virt struct {
 	VirtId int64 `json:"virtId"`
+}
+
+type HeaderOption struct {
+	Channel    string `json:"channel"`
+	Platform   string `json:"platform"`
+	PCode      string `json:"PCode"`
+	AcCode     string `json:"acCode"`
+	InviteCode string `json:"inviteCode"`
 }

@@ -45,16 +45,15 @@ type MsgEmail struct {
 	TraceId     string         `json:"traceId"`
 }
 type MsgCoupon struct {
-	//MailConfig    *mail.MailConf `json:"mailConfig"`
-	//MailContent   *mail.Email    `json:"mailContent"`
 	MailTpId      int64  `json:"mailTpId"`
 	Account       string `json:"account"`
 	IsHtml        bool   `json:"isHtml"`
 	MailType      int64  `json:"mailType"`
 	VirtId        int64  `json:"virtId"`
-	PId           int64  `json:"pId"`    //券ID
+	PId           int64  `json:"pId"` //券ID
+	AcCode        string `json:"acCode"`
 	AcType        string `json:"acType"` //活动类型
-	AcCode        string `json:"acCode"` //活动code
+	XCode         string `json:"XCode"`  //推广XCode
 	AcId          int64  `json:"acId"`
 	IssueUserId   int64  `json:"issueUserId"`
 	IsSendMail    bool   `json:"isSendMail"`
