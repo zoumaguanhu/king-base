@@ -34,15 +34,17 @@ const (
 	ACCOUNT_CODE_KEY     = "site:vsite:%v:code:account:%v"
 )
 const (
-	STAT_FIELD_XCODE   = "platform:%v:xCode:%v:%v"
-	STAT_FIELDE        = "platform:%v:%v"
+	STAT_FIELD_XCODE   = "platform:%v:bz:%v:xCode:%v"
+	STAT_FIELDE        = "platform:%v:bz:%v"
 	SITE_OPTIONS       = "site:vsite:%v"
 	SITE_OPTIONS_FIELD = "option_%v"
+	HOST_STAT_SUFFIX   = "bz:%v:date:%v"
 )
 const (
-	STAT_PV   = "pv"
-	STAT_UV   = "uv"
-	SYNC_TIME = "sync_time"
+	STAT_PV      = "pv"
+	STAT_UV      = "uv"
+	SYNC_TIME    = "sync_time"
+	NATURAL_FLOW = "0000"
 )
 const (
 	STAT_TYPE_1 int64 = 1 //uv

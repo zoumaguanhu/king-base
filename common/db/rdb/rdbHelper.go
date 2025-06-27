@@ -124,12 +124,12 @@ func (m *RedisManger) incrHScript() *string {
 		local key = KEYS[1]
 		local field = ARGV[1]
 		local increment = tonumber(ARGV[2])
-		-- local ttl = tonumber(ARGV[3])
+		local ttl = tonumber(ARGV[3])
 		
 		-- 如果字段不存在，先初始化为0
 		if redis.call("HEXISTS", key, field) == 0 then
 			redis.call("HSET", key, field, 0)
-		--	redis.call("EXPIRE", key, ttl)
+			redis.call("EXPIRE", key, ttl)
 		end
 		
 		-- 执行自增并返回新值

@@ -340,7 +340,7 @@ func (m *RedisManger) StatHScriptResult() bool {
 	if !m.scriptValid() {
 		return false
 	}
-	v, err := m.R.client.Eval(context.Background(), *m.incrHScript(), []string{m.k}, m.f, 1).Int()
+	v, err := m.R.client.Eval(context.Background(), *m.incrHScript(), []string{m.k}, m.f, 1, m.formatSec(*m.t)).Int()
 	if err != nil {
 		logc.Errorf(m.ctx, "StatIncr key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false
