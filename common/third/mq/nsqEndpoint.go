@@ -1,0 +1,190 @@
+package mq
+
+import (
+	"context"
+	"github.com/golang/snappy"
+	"github.com/nsqio/go-nsq"
+	"github.com/zeromicro/go-zero/core/logx"
+	"math/rand"
+	"time"
+)
+
+type NsqTopicConfig struct {
+	NsqdAddrs           []string `json:"NsqdAddrs"`    // 支持多个nsqd
+	LookupdAddrs        []string `json:"LookupdAddrs"` // 支持多个lookupd
+	Name                string   `json:"Name"`
+	Channels            []string `json:"Channels"`
+	MsgTimeout          int      `json:"MsgTimeout,default=10"`         // 秒
+	MaxInFlight         int      `json:"MaxInFlight,default=25"`        // 并发数
+	DefaultRequeueDelay int      `json:"DefaultRequeueDelay,default=3"` // 秒
+	MaxAttempts         int      `json:"MaxAttempts,default=3"`         // 最大重试次数
+}
+type NsqConfig struct {
+	Topics []NsqTopicConfig `json:"Topics"`
+}
+type NsqProducer struct {
+	producer *nsq.Producer
+}
+
+func createNsqConfig(c *NsqTopicConfig) *nsq.Config {
+	config := nsq.NewConfig()
+
+	// 消息处理超时
+	config.MsgTimeout = time.Duration(c.MsgTimeout) * time.Second
+
+	// 最大飞行中消息数(控制并发)
+	config.MaxInFlight = c.MaxInFlight
+
+	// 重试策略
+	config.DefaultRequeueDelay = time.Duration(c.DefaultRequeueDelay) * time.Second
+	config.MaxAttempts = uint16(c.MaxAttempts)
+
+	return config
+}
+
+type NsqProducerWrapper struct {
+	nsp *map[string]*[]*nsq.Producer
+}
+
+func NewNsqProducerWrapper(c *NsqConfig) (*NsqProducerWrapper, bool) {
+	pmp, err := NewNsqProducer(c)
+	if err != nil {
+		return nil, false
+	}
+	return &NsqProducerWrapper{nsp: pmp}, true
+}
+
+func (w *NsqProducerWrapper) Publish(topic string, body []byte) error {
+	if ns, ok := (*w.nsp)[topic]; ok {
+		rand.Seed(time.Now().UnixNano())
+		randomIndex := rand.Intn(len(*ns))
+		return (*ns)[randomIndex].Publish(topic, body)
+	}
+	return nil
+}
+func (w *NsqProducerWrapper) push() {
+
+}
+func NewNsqProducer(c *NsqConfig) (*map[string]*[]*nsq.Producer, error) {
+	config := nsq.NewConfig()
+	nmp := make(map[string]*[]*nsq.Producer, len(c.Topics))
+
+	// 手动连接所有nsqd节点
+	for _, topic := range c.Topics {
+		nps := &[]*nsq.Producer{}
+		for _, addr := range topic.NsqdAddrs {
+			producer, err := nsq.NewProducer(addr, config)
+			if err != nil {
+				continue
+			}
+			if err := producer.Ping(); err != nil {
+				logx.Errorf("连接nsqd失败: %s, error: %v", addr, err)
+				continue
+			}
+			logx.Infof("成功连接nsqd: %s", addr)
+			*nps = append(*nps, producer)
+		}
+		if len(*nps) <= 0 {
+			continue
+		}
+		nmp[topic.Name] = nps
+	}
+	return &nmp, nil
+}
+
+// 生产者健康检查
+func (p *NsqProducer) HealthCheck() bool {
+	return p.producer.Ping() == nil
+}
+func (p *NsqProducer) Publish(topic string, body []byte) error {
+	return p.producer.Publish(topic, body)
+}
+func (p *NsqProducer) PublishCompressed(topic string, body []byte) error {
+	compressed := snappy.Encode(nil, body)
+	return p.producer.Publish(topic, compressed)
+}
+
+func (p *NsqProducer) Stop() {
+	p.producer.Stop()
+}
+
+type NsqHandler struct {
+	ctx    context.Context
+	handle func(ctx context.Context, message []byte) error
+}
+
+func NewNsqHandler(ctx context.Context,
+	handle func(ctx context.Context, message []byte) error) *NsqHandler {
+
+	return &NsqHandler{
+		ctx:    ctx,
+		handle: handle,
+	}
+}
+
+func (h *NsqHandler) HandleMessage(msg *nsq.Message) error {
+	logx.WithContext(h.ctx).Infof("收到NSQ消息: %s", string(msg.Body))
+
+	if err := h.handle(h.ctx, msg.Body); err != nil {
+		logx.WithContext(h.ctx).Errorf("处理消息失败: %v", err)
+		return err // 返回错误会触发NSQ的自动重试
+	}
+
+	return nil
+}
+
+type NsqConsumerWrapper struct {
+	ncs *map[string]*NsqConsumer
+}
+
+func NewNsqConsumerWrapper(c *NsqConfig) (*NsqConsumerWrapper, bool) {
+	cs, err := NewNsqConsumer(c)
+	if err != nil {
+		return nil, false
+	}
+	return &NsqConsumerWrapper{ncs: cs}, true
+}
+
+type NsqConsumer struct {
+	consumer *nsq.Consumer
+	handler  *NsqHandler
+	channel  string
+	topic    string
+}
+
+func NewNsqConsumer(c *NsqConfig) (*map[string]*NsqConsumer, error) {
+	nmp := make(map[string]*NsqConsumer, len(c.Topics))
+	for _, topic := range c.Topics {
+		for _, channel := range topic.Channels {
+
+			consumer, err := nsq.NewConsumer(topic.Name, channel, createNsqConfig(&topic))
+			if err != nil {
+				continue
+			}
+			for _, addr := range topic.LookupdAddrs {
+				// 连接NSQLookupd发现服务
+				if err := consumer.ConnectToNSQLookupd(addr); err != nil {
+					continue
+				}
+			}
+			nc := &NsqConsumer{channel: channel, topic: topic.Name, consumer: consumer}
+			nmp[topic.Name] = nc
+		}
+	}
+	return &nmp, nil
+}
+func (c *NsqConsumerWrapper) AddHandler(channel string, handler nsq.Handler) bool {
+	if cs, ok := (*c.ncs)[channel]; ok {
+		cs.consumer.AddHandler(handler)
+		return true
+	}
+	return false
+}
+
+func (c *NsqConsumer) Start() {
+	// 已在ConnectToNSQLookupd时启动
+}
+
+func (c *NsqConsumer) Stop() {
+
+}

@@ -7,4 +7,5 @@ const PLATFORM = "platform"
 const (
 	PLATFORM_WEB    = "1"
 	PLATFORM_MOBILE = "2"
+	PLATFORM_OTHER  = "3"
 )
