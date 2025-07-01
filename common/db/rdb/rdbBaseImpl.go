@@ -331,7 +331,30 @@ func (m *RedisManger) ZCountResult() (int, bool) {
 	logc.Infof(m.ctx, "StatScriptExpResult info:%v", v)
 	return v, true
 }
-
+func (m *RedisManger) KeyReName(newKey string) bool {
+	if !m.validKey() {
+		return false
+	}
+	v, err := m.R.client.Rename(m.ctx, m.k, newKey).Result()
+	if err != nil {
+		logc.Errorf(m.ctx, "KeyReName key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false
+	}
+	logc.Infof(m.ctx, "KeyReName info:%v", v)
+	return v == newKey
+}
+func (m *RedisManger) KeyReNameNx(newKey string) bool {
+	if !m.validKey() {
+		return false
+	}
+	v, err := m.R.client.RenameNX(m.ctx, m.k, newKey).Result()
+	if err != nil {
+		logc.Errorf(m.ctx, "KeyReName key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false
+	}
+	logc.Infof(m.ctx, "KeyReName info:%v", v)
+	return v
+}
 func (m *RedisManger) RunScriptResult(script string) interface{} {
 	r := m.R.client.Eval(context.Background(), script, []string{m.k}, m.f, *m.v).Val()
 	return r
@@ -546,6 +569,18 @@ func (m *RedisManger) BlogPageScriptResult(start int64, end int64) (bool, interf
 	return true, v
 }
 func (m *RedisManger) DelBlogScriptResult(id int64, detailKey string) bool {
+	if !m.validKey() {
+		return false
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.delBlogScript(), []string{m.k, detailKey}, id).Int()
+	if err != nil {
+		logx.Errorf("DelBlogScriptResult key:%v,sort:%v err:%v", m.k, id, err)
+		return false
+	}
+	logc.Errorf(m.ctx, "DelBlogScriptResult info:%v", v)
+	return v > 0
+}
+func (m *RedisManger) ReCartKeyNameToOrderName(id int64, detailKey string) bool {
 	if !m.validKey() {
 		return false
 	}

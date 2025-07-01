@@ -273,8 +273,8 @@ func (m *RedisManger) CartPageScript() *string {
 func (m *RedisManger) addCartScript() *string {
 	script := `
 	local k = KEYS[1]
-	local k1 = k .. '_hash' 
-	local k2 = k .. '_set'
+	local k1 = k .. ':cart_hash' 
+	local k2 = k .. ':cart_set'
 	local count = redis.call('ZCARD', k2)
 	if count >= 50 then
 		return 2
@@ -304,8 +304,8 @@ func (m *RedisManger) addCartScript() *string {
 func (m *RedisManger) delCartScript() *string {
 	script := `
 	local k = KEYS[1]
-	local k1 = k .. '_hash'
-	local k2 = k .. '_set'
+	local k1 = k .. ':cart_hash'
+	local k2 = k .. ':cart_set'
 	local zsetResult = redis.call('ZREM', k2, ARGV[1])
    	local hashResult = redis.call('HDEL', k1, ARGV[1])
  
@@ -315,8 +315,8 @@ func (m *RedisManger) delCartScript() *string {
 func (m *RedisManger) delUserCartScript() *string {
 	script := `
 	local k = KEYS[1]
-	local k1 = k .. '_hash'
-	local k2 = k .. '_set'
+	local k1 = k .. ':cart_hash'
+	local k2 = k .. ':cart_set'
 	local zsetResult = redis.call('DEL', k2)
    	local hashResult = redis.call('DEL', k1)
  
@@ -399,6 +399,18 @@ func (m *RedisManger) zSetCountScript() *string {
 	script := `
 		local count = redis.call('ZCARD', KEYS[1])
 		return count
+	`
+	return &script
+}
+func (m *RedisManger) reCartNameScript() *string {
+	script := `
+		local k = KEYS[1]
+		local k1 = k .. ':cart_hash'
+		local k2 = k .. ':cart_set'
+
+		local c1 = redis.call('RENAME', k2,KEYS[2])
+		local c2 = redis.call('RENAME', k1,KEYS[2])
+		return c1+c2
 	`
 	return &script
 }

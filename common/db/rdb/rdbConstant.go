@@ -41,6 +41,11 @@ const (
 	HOST_STAT_SUFFIX   = "bz:%v:date:%v"
 )
 const (
+	ORDER_BASE_INFO  = "base_info"
+	ORDER_BASE_ITEMS = "items_info"
+	ORDER_TEMP_KEY   = "site:vsite:%v:member:%v:order:%v"
+)
+const (
 	STAT_PV      = "pv"
 	STAT_UV      = "uv"
 	SYNC_TIME    = "sync_time"

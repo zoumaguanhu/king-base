@@ -113,20 +113,18 @@ type NsqHandler struct {
 	handle func(ctx context.Context, message []byte) error
 }
 
-func NewNsqHandler(ctx context.Context,
-	handle func(ctx context.Context, message []byte) error) *NsqHandler {
+func NewNsqHandler(handle func(ctx context.Context, message []byte) error) *NsqHandler {
 
 	return &NsqHandler{
-		ctx:    ctx,
 		handle: handle,
 	}
 }
 
 func (h *NsqHandler) HandleMessage(msg *nsq.Message) error {
-	logx.WithContext(h.ctx).Infof("收到NSQ消息: %s", string(msg.Body))
-
+	logx.WithContext(h.ctx).Infof("Received the NSQ message: %s", string(msg.Body))
+	msg.DisableAutoResponse()
 	if err := h.handle(h.ctx, msg.Body); err != nil {
-		logx.WithContext(h.ctx).Errorf("处理消息失败: %v", err)
+		logx.WithContext(h.ctx).Errorf("Message processing failed: %v", err)
 		return err // 返回错误会触发NSQ的自动重试
 	}
 
@@ -134,15 +132,13 @@ func (h *NsqHandler) HandleMessage(msg *nsq.Message) error {
 }
 
 type NsqConsumerWrapper struct {
-	ncs *map[string]*NsqConsumer
+	ncs    *[]*NsqConsumer
+	config *NsqConfig
 }
 
 func NewNsqConsumerWrapper(c *NsqConfig) (*NsqConsumerWrapper, bool) {
-	cs, err := NewNsqConsumer(c)
-	if err != nil {
-		return nil, false
-	}
-	return &NsqConsumerWrapper{ncs: cs}, true
+	nmp := &[]*NsqConsumer{}
+	return &NsqConsumerWrapper{ncs: nmp, config: c}, true
 }
 
 type NsqConsumer struct {
@@ -152,37 +148,44 @@ type NsqConsumer struct {
 	topic    string
 }
 
-func NewNsqConsumer(c *NsqConfig) (*map[string]*NsqConsumer, error) {
-	nmp := make(map[string]*NsqConsumer, len(c.Topics))
-	for _, topic := range c.Topics {
-		for _, channel := range topic.Channels {
+func (c *NsqConsumerWrapper) AddConsumer(nc *NsqConsumer) {
+	*c.ncs = append(*c.ncs, nc)
+}
+func (c *NsqConsumerWrapper) Start(c1 *NsqConfig) {
 
-			consumer, err := nsq.NewConsumer(topic.Name, channel, createNsqConfig(&topic))
-			if err != nil {
+}
+
+func (c *NsqConsumerWrapper) NewNsqConsumer(chl string, handler func(ctx context.Context, message []byte) error) (*NsqConsumer, error) {
+	for _, topic := range c.config.Topics {
+		for _, channel := range topic.Channels {
+			if channel != chl {
 				continue
 			}
+			consumer, err := nsq.NewConsumer(topic.Name, channel, createNsqConfig(&topic))
+			if err != nil {
+				logx.Errorf("NewNsqConsumer topic:%v,channel:%v, err:%v", topic.Name, channel, err)
+				return nil, err
+			}
+
+			consumer.AddHandler(NewNsqHandler(handler))
 			for _, addr := range topic.LookupdAddrs {
 				// 连接NSQLookupd发现服务
 				if err := consumer.ConnectToNSQLookupd(addr); err != nil {
-					continue
+					logx.Errorf("NewNsqConsumer ConnectToNSQLookupd add:%v,err:%v", addr, err)
+					return nil, err
 				}
 			}
+
 			nc := &NsqConsumer{channel: channel, topic: topic.Name, consumer: consumer}
-			nmp[topic.Name] = nc
+			return nc, nil
 		}
 	}
-	return &nmp, nil
-}
-func (c *NsqConsumerWrapper) AddHandler(channel string, handler nsq.Handler) bool {
-	if cs, ok := (*c.ncs)[channel]; ok {
-		cs.consumer.AddHandler(handler)
-		return true
-	}
-	return false
+	return nil, nil
 }
 
-func (c *NsqConsumer) Start() {
+func (c *NsqConsumer) Start(cg *NsqConfig) {
 	// 已在ConnectToNSQLookupd时启动
+
 }
 
 func (c *NsqConsumer) Stop() {
