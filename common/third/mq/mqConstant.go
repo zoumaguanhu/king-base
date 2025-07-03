@@ -1,15 +1,25 @@
 package mq
 
+// Topic
+const (
+	COMMAND_TOPIC     = "command"
+	SYS_TOPIC         = "sys"
+	COUPON_TOPIC      = "coupon"
+	CART_TOPIC        = "cart"
+	USER_ACTION_TOPIC = "user_action"
+)
+
 // 队列名
 const (
-	COMMAND_QUEUE     = "command_queue"
-	SYS_QUEUE         = "sys_queue"
-	COUPON_QUEUE      = "coupon_queue"
-	CART_QUEUE        = "cart_queue"
-	USER_ACTION_QUEUE = "user_action_queue"
+	COMMAND_CHANNEL     = "command_channel"
+	SYS_CHANNEL         = "sys_channel"
+	COUPON_CHANNEL      = "coupon_channel"
+	CART_CHANNEL        = "cart_channel"
+	USER_ACTION_CHANNEL = "user_action_channel"
 )
 
 // bz类型
+
 const (
 	PRODUCT_BZ     = "product_bz"
 	SITE_BZ        = "site_bz"

@@ -13,3 +13,9 @@ const (
 var (
 	VISIBLE_STATUS = [...]int64{1, 2, 3, 4, 6, 7, 8, 9}
 )
+
+const (
+	ORDER_SALE        = 1
+	ORDER_PART_REFUND = 2
+	ORDER_ALL_REFUND  = 3
+)

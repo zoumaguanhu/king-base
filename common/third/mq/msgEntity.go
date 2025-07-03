@@ -5,10 +5,9 @@ import (
 )
 
 type MsgHeader struct {
-	MsgId        string `json:"msgId"`
-	ExchangeName string `json:"exchangeName"`
-	RoutingKey   string `json:"routingKey"`
-	PublishTime  string `json:"publishTime"`
+	MsgId       string `json:"msgId"`
+	Topic       string `json:"topic"`
+	PublishTime string `json:"publishTime"`
 }
 type MsgBody struct {
 	TraceId     string `json:"traceId"`
@@ -81,4 +80,31 @@ type MsgContentTp struct {
 	VirtId  int64  `json:"virtId"`
 	Exp     string `json:"exp"`
 	Updater int64  `json:"updater"`
+}
+type MsgOrderItem struct {
+	PName     string `json:"pName"`
+	PImg      string `json:"pImg"`
+	PId       int64  `json:"pId"`
+	PType     int64  `json:"pType"`
+	Price     string `json:"price"`
+	RealPrice string `json:"realPrice"`
+	PCount    int64  `json:"pCount"`
+	MId       int64  `json:"mId"`
+	VirtId    int64  `json:"virtId"`
+	Skus      string `json:"skus"`
+}
+
+type MsgOrder struct {
+	OrderNo      string `json:"orderNo"`
+	Status       int64  `json:"status"`
+	OrderType    int64  `json:"orderType"`
+	TotalPrice   string `json:"totalPrice"`
+	RealPrice    string `json:"realPrice"`
+	OrderTimeOut string `json:"orderTimeOut"`
+	MId          int64  `json:"MId"`
+	XCode        string `json:"xCode"`
+	Platform     string `json:"platform"`
+	VirtId       int64  `json:"virtId"`
+	CartStep     int64  `json:"cartStep"`  //阶段参数
+	OrderStep    int64  `json:"orderStep"` //阶段参数
 }

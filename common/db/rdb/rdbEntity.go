@@ -65,3 +65,17 @@ type ContentTpLimit struct {
 	PublishLimit int64 `json:"publishLimit"`
 	Status       int64 `json:"status"`
 }
+type OrderContent struct {
+	OrderNo      string `json:"orderNo"`
+	Status       int64  `json:"status"`
+	OrderType    int64  `json:"orderType"`
+	TotalPrice   string `json:"totalPrice"`
+	RealPrice    string `json:"realPrice"`
+	OrderTimeOut string `json:"orderTimeOut"`
+	MId          int64  `json:"MId"`
+	XCode        string `json:"xCode"`
+	Platform     string `json:"platform"`
+	VirtId       int64  `json:"virtId"`
+	CartStep     int64  `json:"cartStep"`  //阶段参数
+	OrderStep    int64  `json:"orderStep"` //阶段参数
+}

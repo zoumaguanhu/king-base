@@ -4,7 +4,10 @@ import (
 	"context"
 	"github.com/golang/snappy"
 	"github.com/nsqio/go-nsq"
+	"github.com/zeromicro/go-zero/core/logc"
 	"github.com/zeromicro/go-zero/core/logx"
+	"king.com/king/base/common/constants"
+	"king.com/king/base/common/strs"
 	"math/rand"
 	"time"
 )
@@ -58,12 +61,23 @@ func (w *NsqProducerWrapper) Publish(topic string, body []byte) error {
 	if ns, ok := (*w.nsp)[topic]; ok {
 		rand.Seed(time.Now().UnixNano())
 		randomIndex := rand.Intn(len(*ns))
-		return (*ns)[randomIndex].Publish(topic, body)
+		if e := w.randomPublish((*ns)[randomIndex], topic, body); e != nil {
+			for _, producer := range *ns {
+				if e1 := w.randomPublish(producer, topic, body); e1 != nil {
+					continue
+				}
+			}
+		}
+
 	}
 	return nil
 }
-func (w *NsqProducerWrapper) push() {
-
+func (w *NsqProducerWrapper) randomPublish(nsp *nsq.Producer, topic string, body []byte) error {
+	if e := nsp.Publish(topic, body); e != nil {
+		logx.Errorf("nsq producer err:%v", e)
+		return e
+	}
+	return nil
 }
 func NewNsqProducer(c *NsqConfig) (*map[string]*[]*nsq.Producer, error) {
 	config := nsq.NewConfig()
@@ -121,7 +135,17 @@ func NewNsqHandler(handle func(ctx context.Context, message []byte) error) *NsqH
 }
 
 func (h *NsqHandler) HandleMessage(msg *nsq.Message) error {
+	defer func() {
+		if e := recover(); e != nil {
+			logc.Errorf(h.ctx, "HandleMessage err:%v", e)
+		}
+	}()
 	logx.WithContext(h.ctx).Infof("Received the NSQ message: %s", string(msg.Body))
+	s := string(msg.Body)
+	ms := &MsgStruct{}
+	strs.StrToObj(&s, ms)
+	ctx := logx.WithFields(context.Background(), logx.Field(constants.TRACE_ID, ms.Header.MsgId))
+	h.ctx = ctx
 	msg.DisableAutoResponse()
 	if err := h.handle(h.ctx, msg.Body); err != nil {
 		logx.WithContext(h.ctx).Errorf("Message processing failed: %v", err)
