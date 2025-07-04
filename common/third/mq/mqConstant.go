@@ -2,20 +2,22 @@ package mq
 
 // Topic
 const (
-	COMMAND_TOPIC     = "command"
-	SYS_TOPIC         = "sys"
-	COUPON_TOPIC      = "coupon"
-	CART_TOPIC        = "cart"
-	USER_ACTION_TOPIC = "user_action"
+	COMMAND_TOPIC      = "command"
+	SYS_TOPIC          = "sys"
+	COUPON_TOPIC       = "coupon"
+	CART_TOPIC         = "cart"
+	USER_ACTION_TOPIC  = "user_action"
+	CREATE_ORDER_TOPIC = "create_order"
 )
 
 // 队列名
 const (
-	COMMAND_CHANNEL     = "command_channel"
-	SYS_CHANNEL         = "sys_channel"
-	COUPON_CHANNEL      = "coupon_channel"
-	CART_CHANNEL        = "cart_channel"
-	USER_ACTION_CHANNEL = "user_action_channel"
+	COMMAND_CHANNEL      = "command_channel"
+	SYS_CHANNEL          = "sys_channel"
+	COUPON_CHANNEL       = "coupon_channel"
+	CART_CHANNEL         = "cart_channel"
+	USER_ACTION_CHANNEL  = "user_action_channel"
+	CREATE_ORDER_CHANNEL = "create_order_channel"
 )
 
 // bz类型
@@ -29,6 +31,7 @@ const (
 	CART_BZ        = "cart_bz"
 	USER_ACTION_BZ = "user_action_bz"
 	CONTENT_TP_BZ  = "content_tp_bz"
+	ORDER_BZ       = "order_bz"
 )
 
 // CommandType类型
@@ -40,11 +43,14 @@ const (
 	ISSUE_COUPON_COMMAND           = "issue_coupon_command"
 	SIGN_UP_ISSUE_COUPON_COMMAND   = "sign_up_issue_coupon_command"
 	ORDER_PAY_ISSUE_COUPON_COMMAND = "order_pay_issue_coupon_command"
+	ORDER_CREATE_COMMAND           = "order_create_command"
 	MAIL_CODE_COMMAND              = "mail_code_command"
 	CART_ADD_COMMAND               = "cart_add_command"
 	CART_EDIT_COMMAND              = "cart_edit_command"
 	CART_DEL_COMMAND               = "cart_del_command"
 	CART_REFRESH_COMMAND           = "cart_refresh_command"
+	CART_BATCH_REMOVE_COMMAND      = "cart_batch_remove_command"
+	CART_CLEAR_COMMAND             = "cart_clear_command"
 	USER_REGISTER_COMMAND          = "user_register_command"
 	USER_SIGN_IN_COMMAND           = "user_sign_in_command"
 	USER_SIGN_UP_COMMAND           = "user_sign_up_command"

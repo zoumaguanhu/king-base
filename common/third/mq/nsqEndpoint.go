@@ -64,10 +64,16 @@ func (w *NsqProducerWrapper) Publish(topic string, body []byte) error {
 		if e := w.randomPublish((*ns)[randomIndex], topic, body); e != nil {
 			for _, producer := range *ns {
 				if e1 := w.randomPublish(producer, topic, body); e1 != nil {
+					logx.Errorf("NSQ Publish topic:%v,err1:%v", topic, e)
 					continue
 				}
+				logx.Infof("NSQ Publish topic:%v success", topic)
+				return nil
 			}
+			logx.Errorf("NSQ Publish topic:%v,err:%v", topic, e)
+			return e
 		}
+		logx.Infof("NSQ Publish topic:%v success", topic)
 
 	}
 	return nil

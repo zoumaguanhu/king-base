@@ -70,6 +70,7 @@ type CartInfo struct {
 	SkuChildId int64 `json:"skuChildId"`
 	MId        int64 `json:"MId"`
 }
+
 type UserAction struct {
 	MId    int64  `json:"mId"`
 	VirtId int64  `json:"virtId"`
@@ -107,4 +108,8 @@ type MsgOrder struct {
 	VirtId       int64  `json:"virtId"`
 	CartStep     int64  `json:"cartStep"`  //阶段参数
 	OrderStep    int64  `json:"orderStep"` //阶段参数
+}
+type MsgBatchRemoveCart struct {
+	OrderNo string `json:"OrderNo"`
+	VirtId  int64  `json:"VirtId"`
 }

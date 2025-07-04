@@ -395,6 +395,30 @@ func (m *RedisManger) ProductPageScriptResult(start int64, end int64) (bool, int
 	logc.Infof(m.ctx, "ProductPageScriptResult info:%v", v)
 	return true, v
 }
+func (m *RedisManger) ProductListScriptResult(ids *[]int64) (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.ProductListScript(), []string{m.k}, ids).Result()
+	if err != nil {
+		logc.Errorf(m.ctx, "ProductListScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	logc.Infof(m.ctx, "ProductListScriptResult info:%v", v)
+	return true, v
+}
+func (m *RedisManger) StockProductScriptResult(keys *[]string, stocks *[]string) (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.reStoreScript(), *keys, *stocks).Result()
+	if err != nil {
+		logc.Errorf(m.ctx, "StockProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	logc.Infof(m.ctx, "StockProductScriptResult info:%v", v)
+	return true, v
+}
 func (m *RedisManger) AddProductScriptResult(data any, sort int64, id string, dKey string, dData string) (bool, int) {
 	if !m.validKey() {
 		return false, 0
@@ -405,7 +429,6 @@ func (m *RedisManger) AddProductScriptResult(data any, sort int64, id string, dK
 		logc.Errorf(m.ctx, "AddProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
-	logc.Errorf(m.ctx, "AddProductScriptResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) DelProductScriptResult(id, dKey string) (bool, interface{}) {
@@ -476,6 +499,18 @@ func (m *RedisManger) CartPageScriptResult(start int64, end int64) (bool, interf
 		return false, 0
 	}
 	v, err := m.R.client.Eval(context.Background(), *m.CartPageScript(), []string{m.k}, start, end).Result()
+	if err != nil {
+		logc.Errorf(m.ctx, "CartPageScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	logc.Infof(m.ctx, "CartPageScriptResult info:%v", v)
+	return true, v
+}
+func (m *RedisManger) ReNameCartPageScriptResult(start int64, end int64) (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.ReNameCartPageScript(), []string{m.k}, start, end).Result()
 	if err != nil {
 		logc.Errorf(m.ctx, "CartPageScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
@@ -580,13 +615,13 @@ func (m *RedisManger) DelBlogScriptResult(id int64, detailKey string) bool {
 	logc.Errorf(m.ctx, "DelBlogScriptResult info:%v", v)
 	return v > 0
 }
-func (m *RedisManger) ReCartKeyNameToOrderName(id int64, detailKey string) bool {
+func (m *RedisManger) ReCartKeyNameToOrderName() bool {
 	if !m.validKey() {
 		return false
 	}
-	v, err := m.R.client.Eval(context.Background(), *m.delBlogScript(), []string{m.k, detailKey}, id).Int()
+	v, err := m.R.client.Eval(context.Background(), *m.reCartNameScript(), []string{m.k}).Int()
 	if err != nil {
-		logx.Errorf("DelBlogScriptResult key:%v,sort:%v err:%v", m.k, id, err)
+		logx.Errorf("DelBlogScriptResult key:%v, err:%v", m.k, err)
 		return false
 	}
 	logc.Errorf(m.ctx, "DelBlogScriptResult info:%v", v)

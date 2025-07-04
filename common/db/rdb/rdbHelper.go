@@ -169,6 +169,16 @@ func (m *RedisManger) ProductPageScript() *string {
 		return {total, products} `
 	return &script
 }
+func (m *RedisManger) ProductListScript() *string {
+	script := `-- 获取总数量
+		local k = KEYS[1]
+		local k1= k .. '_hash'
+		-- 批量获取产品详情
+		local products = redis.call('HMGET',k1, unpack(ARGV[1]))
+		
+		return {products} `
+	return &script
+}
 func (m *RedisManger) addProductScript() *string {
 	script := `
 	local k = KEYS[1]
@@ -258,8 +268,23 @@ func (m *RedisManger) delBannerScript() *string {
 func (m *RedisManger) CartPageScript() *string {
 	script := `-- 获取总数量
 		local k = KEYS[1]
-		local k1= k .. '_set'
-		local k2= k .. '_hash'
+		local k1= k .. ':cart_set'
+		local k2= k .. ':cart_hash'
+		local total = redis.call('ZCARD',k1)
+		-- 获取分页的cart combId 列表
+		local productIDs = redis.call('ZREVRANGE', k1, ARGV[1], ARGV[2])
+	
+		-- 批量获取cart详情
+		local carts = redis.call('HMGET',k2, unpack(productIDs))
+		
+		return {total, carts} `
+	return &script
+}
+func (m *RedisManger) ReNameCartPageScript() *string {
+	script := `-- 获取总数量
+		local k = KEYS[1]
+		local k1= k .. ':temp:cart_set'
+		local k2= k .. ':temp:cart_hash'
 		local total = redis.call('ZCARD',k1)
 		-- 获取分页的cart combId 列表
 		local productIDs = redis.call('ZREVRANGE', k1, ARGV[1], ARGV[2])
@@ -407,10 +432,30 @@ func (m *RedisManger) reCartNameScript() *string {
 		local k = KEYS[1]
 		local k1 = k .. ':cart_hash'
 		local k2 = k .. ':cart_set'
+		local n1 = k .. ':temp:cart_hash'
+		local n2 = k .. ':temp:cart_set'
 
-		local c1 = redis.call('RENAME', k2,KEYS[2])
-		local c2 = redis.call('RENAME', k1,KEYS[2])
-		return c1+c2
+		local c1 = redis.call('RENAME', k2,n2)
+		local c2 = redis.call('RENAME', k1,n1)
+		return 1
+	`
+	return &script
+}
+func (m *RedisManger) reStoreScript() *string {
+	script := `
+		-- KEYS = 商品ID列表（如 ["stock:1001", "stock:1002", ..., "stock:1010"]）
+		-- ARGV = 对应扣减数量（如 [2, 1, 3, ..., 1]）
+		local results = {}
+		for i, key in ipairs(KEYS) do
+			local stock = tonumber(redis.call('GET', key) or 0)
+			local count = tonumber(ARGV[i])
+			if stock >= count then
+				results[key] = redis.call('DECRBY', key, count)
+			else
+				results[key] = -1  -- 库存不足标记
+			end
+		end
+		return results	
 	`
 	return &script
 }

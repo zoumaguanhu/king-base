@@ -23,15 +23,17 @@ const (
 	SITE_BLOG    = "blog"
 )
 const (
-	PRODUCT_KEY          = "site:vsite:%v:product:page:product_hash"
-	PRODUCT_SKU_KEY      = "site:vsite:%v:product:detail:%v:product_skus"
-	PRODUCT_IMG_KEY      = "site:vsite:%v:product:detail:%v:product_imgs"
-	PRODUCT_REVIEW_KEY   = "site:vsite:%v:product:detail:%v:product_review"
-	BLOG_PAGE_HASH_KEY   = "site:vsite:%v:blog:page:blog_hash"
-	BLOG_PAGE_SET_KEY    = "site:vsite:%v:blog:page:blog_set"
-	BLOG_PAGE_PREFIX_KEY = "site:vsite:%v:blog:page:blog"
-	BLOG_DETAIL_KEY      = "site:vsite:%v:blog:detail:blog_hash"
-	ACCOUNT_CODE_KEY     = "site:vsite:%v:code:account:%v"
+	PRODUCT_KEY           = "site:vsite:%v:product:page:product_hash"
+	PRODUCT_SKU_KEY       = "site:vsite:%v:product:detail:%v:product_skus"
+	PRODUCT_IMG_KEY       = "site:vsite:%v:product:detail:%v:product_imgs"
+	PRODUCT_REVIEW_KEY    = "site:vsite:%v:product:detail:%v:product_review"
+	PRODUCT_STORE_KEY     = "site:vsite:%v:product:store:%v:%v:product_store"
+	PRODUCT_STORE_OPTIONE = "%v_%v"
+	BLOG_PAGE_HASH_KEY    = "site:vsite:%v:blog:page:blog_hash"
+	BLOG_PAGE_SET_KEY     = "site:vsite:%v:blog:page:blog_set"
+	BLOG_PAGE_PREFIX_KEY  = "site:vsite:%v:blog:page:blog"
+	BLOG_DETAIL_KEY       = "site:vsite:%v:blog:detail:blog_hash"
+	ACCOUNT_CODE_KEY      = "site:vsite:%v:code:account:%v"
 )
 const (
 	STAT_FIELD_XCODE   = "platform:%v:bz:%v:xCode:%v"
@@ -44,6 +46,7 @@ const (
 	ORDER_BASE_INFO  = "base_info"
 	ORDER_BASE_ITEMS = "items_info"
 	ORDER_TEMP_KEY   = "site:vsite:%v:member:%v:order:%v"
+	CART_TEMP_KEY    = "site:vsite:%v:member:%v:cart:%v"
 )
 const (
 	STAT_PV      = "pv"
