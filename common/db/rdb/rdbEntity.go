@@ -1,5 +1,7 @@
 package rdb
 
+import "time"
+
 // 用户缓存信息结构体
 
 type UserInfo struct {
@@ -66,16 +68,16 @@ type ContentTpLimit struct {
 	Status       int64 `json:"status"`
 }
 type OrderContent struct {
-	OrderNo      string `json:"orderNo"`
-	Status       int64  `json:"status"`
-	OrderType    int64  `json:"orderType"`
-	TotalPrice   string `json:"totalPrice"`
-	RealPrice    string `json:"realPrice"`
-	OrderTimeOut string `json:"orderTimeOut"`
-	MId          int64  `json:"MId"`
-	XCode        string `json:"xCode"`
-	Platform     string `json:"platform"`
-	VirtId       int64  `json:"virtId"`
-	CartStep     int64  `json:"cartStep"`  //阶段参数
-	OrderStep    int64  `json:"orderStep"` //阶段参数
+	OrderNo      string    `json:"orderNo"`
+	Status       int64     `json:"status"`
+	OrderType    int64     `json:"orderType"`
+	TotalPrice   string    `json:"totalPrice"`
+	RealPrice    string    `json:"realPrice"`
+	OrderTimeOut time.Time `json:"orderTimeout"`
+	MId          int64     `json:"mId"`
+	XCode        string    `json:"xCode"`
+	Platform     string    `json:"platform"`
+	VirtId       int64     `json:"virtId"`
+	CartStep     int64     `json:"cartStep"`  //阶段参数
+	OrderStep    int64     `json:"orderStep"` //阶段参数
 }
