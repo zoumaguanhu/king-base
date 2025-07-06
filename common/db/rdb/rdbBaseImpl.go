@@ -423,9 +423,6 @@ func (m *RedisManger) StockProductScriptResult(keys *[]string, stocks *[]string)
 	return true, v
 }
 func (m *RedisManger) CheckStockProductScriptResult(keys *[]string, stocks *[]string) (bool, interface{}) {
-	if !m.validKey() {
-		return false, 0
-	}
 	v, err := m.R.client.Eval(context.Background(), *m.checkReStoreScript(), *keys, *stocks).Result()
 	if err != nil {
 		logc.Errorf(m.ctx, "StockProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
