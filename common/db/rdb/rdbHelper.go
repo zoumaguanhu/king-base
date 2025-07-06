@@ -445,14 +445,55 @@ func (m *RedisManger) reStoreScript() *string {
 	script := `
 		-- KEYS = 商品ID列表（如 ["stock:1001", "stock:1002", ..., "stock:1010"]）
 		-- ARGV = 对应扣减数量（如 [2, 1, 3, ..., 1]）
+		
+		local results = {}
+		local error_flag = false
+		local error_index = 0
+		
+		-- 单次遍历完成检查和扣减
+		for i, key in ipairs(KEYS) do
+			local count = tonumber(ARGV[i])
+			
+			-- 使用GETSET原子操作检查并扣减库存
+			local current = redis.call('GET', key)
+			
+			-- 库存不存在或不足
+			if not current or tonumber(current) < count then
+				error_flag = true
+				error_index = i
+				results[i] = -1  -- 标记库存不足
+			else
+				-- 原子性扣减库存
+				local new_stock = redis.call('DECRBY', key, count)
+				results[i] = new_stock
+			end
+		end
+		
+		-- 如果有任何扣减失败，回滚所有操作
+		if error_flag then
+			-- 回滚已扣减的库存
+			for i = 1, error_index - 1 do
+				if results[i] >= 0 then
+					redis.call('INCRBY', KEYS[i], ARGV[i])
+				end
+			end
+			return redis.error_reply("库存不足，已回滚所有操作")
+		end
+		
+		return results
+	`
+	return &script
+}
+func (m *RedisManger) checkReStoreScript() *string {
+	script := `
+		-- KEYS = 商品ID列表（如 ["stock:1001", "stock:1002", ..., "stock:1010"]）
+		-- ARGV = 对应扣减数量（如 [2, 1, 3, ..., 1]）
 		local results = {}
 		for i, key in ipairs(KEYS) do
 			local stock = tonumber(redis.call('GET', key) or 0)
 			local count = tonumber(ARGV[i])
-			if stock >= count then
-				results[key] = redis.call('DECRBY', key, count)
-			else
-				results[key] = -1  -- 库存不足标记
+			if stock < count then
+				results[#results + 1] = key -- 库存不足标记
 			end
 		end
 		return results	

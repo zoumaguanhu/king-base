@@ -272,7 +272,10 @@ func (m *RedisManger) QueryVal() interface{} {
 	return m.v
 }
 func (m *RedisManger) HQueryResult() interface{} {
-	if !m.valid() {
+	if !m.validKey() {
+		return false
+	}
+	if !m.validField() {
 		return false
 	}
 	s := m.R.HGet(m.k, m.f)
@@ -412,6 +415,18 @@ func (m *RedisManger) StockProductScriptResult(keys *[]string, stocks *[]string)
 		return false, 0
 	}
 	v, err := m.R.client.Eval(context.Background(), *m.reStoreScript(), *keys, *stocks).Result()
+	if err != nil {
+		logc.Errorf(m.ctx, "StockProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	logc.Infof(m.ctx, "StockProductScriptResult info:%v", v)
+	return true, v
+}
+func (m *RedisManger) CheckStockProductScriptResult(keys *[]string, stocks *[]string) (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.checkReStoreScript(), *keys, *stocks).Result()
 	if err != nil {
 		logc.Errorf(m.ctx, "StockProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
