@@ -98,10 +98,10 @@ func NewNsqProducer(c *NsqConfig) (*map[string]*[]*nsq.Producer, error) {
 				continue
 			}
 			if err := producer.Ping(); err != nil {
-				logx.Errorf("连接nsqd失败: %s, error: %v", addr, err)
+				logx.Errorf("connection nsqd fail: %s, error: %v", addr, err)
 				continue
 			}
-			logx.Infof("成功连接nsqd: %s", addr)
+			logx.Infof("Successful connection nsqd: %s", addr)
 			*nps = append(*nps, producer)
 		}
 		if len(*nps) <= 0 {
