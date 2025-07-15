@@ -29,6 +29,7 @@ const (
 	PRODUCT_REVIEW_KEY    = "site:vsite:%v:product:detail:%v:product_review"
 	PRODUCT_STORE_KEY     = "site:vsite:%v:product:store:%v:%v:product_store"
 	CARK_HASH_KEY         = "site:vsite:%v:member:%v:cart:cart_hash"
+	ADDRESS_HASH_KEY      = "site:vsite:%v:member:%v:address:address_hash"
 	PRODUCT_STORE_OPTIONE = "%v_%v"
 	BLOG_PAGE_HASH_KEY    = "site:vsite:%v:blog:page:blog_hash"
 	BLOG_PAGE_SET_KEY     = "site:vsite:%v:blog:page:blog_set"
@@ -46,8 +47,14 @@ const (
 const (
 	ORDER_BASE_INFO  = "base_info"
 	ORDER_BASE_ITEMS = "items_info"
-	ORDER_TEMP_KEY   = "site:vsite:%v:member:%v:order:%v"
-	CART_TEMP_KEY    = "site:vsite:%v:member:%v:cart:%v"
+
+	ORDER_TEMP_KEY        = "site:vsite:%v:member:%v:order:%v"
+	ORDER_PAGE_KEY_PREFIX = "site:vsite:%v:member:%v:order:page:order"
+	ORDER_DETAIL          = "site:vsite:%v:member:%v:order:detail:%v"
+	CART_TEMP_KEY         = "site:vsite:%v:member:%v:cart:%v"
+)
+const (
+	COUNTRY_LIST_INFO = "site:vsite:common:country"
 )
 const (
 	STAT_PV      = "pv"

@@ -569,26 +569,7 @@ func (m *RedisManger) DelUserCartScriptResult() (bool, interface{}) {
 }
 
 func (m *RedisManger) AddSiteAndOptionsResult(data *map[string]interface{}) bool {
-	if !m.validKey() {
-		return false
-	}
-	// 构建参数列表
-	args := make([]interface{}, 0, len(*data)*2+1)
-
-	// 展开map为键值对列表
-	for k, v := range *data {
-		args = append(args, k, v)
-	}
-
-	// 添加过期时间参数
-	args = append(args, m.formatSec(*m.t))
-	cmd := m.R.client.Eval(context.Background(), *m.hMSetExpScript(), []string{m.k}, args...)
-	if cmd.Err() != nil {
-		logc.Errorf(m.ctx, "AddSiteAndOptionsResult key:%v,field:%v, err:%v", m.k, m.f, cmd.Err())
-		return false
-	}
-	logc.Errorf(m.ctx, "AddSiteAndOptionsResult info:%+v", data)
-	return true
+	return m.AddMapResult(data)
 }
 func (m *RedisManger) AddBlogScriptResult(id string, detailKey string, sort int64, data string, dData string) bool {
 	if !m.validKey() {
@@ -638,4 +619,65 @@ func (m *RedisManger) ReCartKeyNameToOrderName() bool {
 	}
 	logc.Errorf(m.ctx, "DelBlogScriptResult info:%v", v)
 	return v > 0
+}
+func (m *RedisManger) AddAddressResult(data *map[string]interface{}) bool {
+	return m.AddMapResult(data)
+}
+func (m *RedisManger) AddMapResult(data *map[string]interface{}) bool {
+	if !m.validKey() {
+		return false
+	}
+	// 构建参数列表
+	args := make([]interface{}, 0, len(*data)*2+1)
+
+	// 展开map为键值对列表
+	for k, v := range *data {
+		args = append(args, k, v)
+	}
+
+	// 添加过期时间参数
+	args = append(args, m.formatSec(*m.t))
+	cmd := m.R.client.Eval(context.Background(), *m.hMSetExpScript(), []string{m.k}, args...)
+	if cmd.Err() != nil {
+		logc.Errorf(m.ctx, "AddSiteAndOptionsResult key:%v,field:%v, err:%v", m.k, m.f, cmd.Err())
+		return false
+	}
+	logc.Errorf(m.ctx, "AddSiteAndOptionsResult info:%+v", data)
+	return true
+}
+func (m *RedisManger) OrderPageScriptResult(start int64, end int64) (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.OrderPageScript(), []string{m.k}, start, end).Result()
+	if err != nil {
+		logc.Errorf(m.ctx, "OrderPageScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	logc.Infof(m.ctx, "OrderPageScriptResult info:%v", v)
+	return true, v
+}
+func (m *RedisManger) AddOrderScriptResult(data any, sort int64, id string, dKey string, dData string) (bool, int) {
+	if !m.validKey() {
+		return false, 0
+	}
+	d := strs.ObjToStr(data)
+	v, err := m.R.client.Eval(context.Background(), *m.addOrderScript(), []string{m.k, id, dKey}, sort, d, dData).Int()
+	if err != nil {
+		logc.Errorf(m.ctx, "AddOrderScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	return true, v
+}
+func (m *RedisManger) DelOrderScriptResult(id, dKey string) (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.delOrderScript(), []string{m.k, dKey}, id).Result()
+	if err != nil {
+		logx.Errorf("DelOrderScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	logc.Errorf(m.ctx, "DelOrderScriptResult info:%v", v)
+	return true, v
 }

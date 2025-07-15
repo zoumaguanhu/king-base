@@ -90,3 +90,7 @@ type PayToolSimpleInfo struct {
 	ClientId   string `json:"clientId"`
 	PayChannel string `json:"payChannel"`
 }
+type CountryInfo struct {
+	Id   int64  `json:"Id"`
+	Name string `json:"Name"`
+}

@@ -11,7 +11,8 @@ const (
 )
 
 var (
-	VISIBLE_STATUS = [...]int64{1, 2, 3, 4, 6, 7, 8, 9}
+	VISIBLE_STATUS = []int64{1, 2, 3, 4, 6, 7, 8, 9}
+	VALID_STATUS   = []int64{1, 2, 3, 4, 6, 7, 8, 9}
 )
 
 const (

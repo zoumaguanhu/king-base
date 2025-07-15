@@ -152,7 +152,7 @@ func (h *NsqHandler) HandleMessage(msg *nsq.Message) error {
 	strs.StrToObj(&s, ms)
 	ctx := logx.WithFields(context.Background(), logx.Field(constants.TRACE_ID, ms.Header.MsgId))
 	h.ctx = ctx
-	msg.DisableAutoResponse()
+	//msg.DisableAutoResponse()
 	if err := h.handle(h.ctx, msg.Body); err != nil {
 		logx.WithContext(h.ctx).Errorf("Message processing failed: %v", err)
 		return err // 返回错误会触发NSQ的自动重试

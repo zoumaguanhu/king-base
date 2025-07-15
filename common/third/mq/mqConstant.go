@@ -54,5 +54,7 @@ const (
 	USER_REGISTER_COMMAND          = "user_register_command"
 	USER_SIGN_IN_COMMAND           = "user_sign_in_command"
 	USER_SIGN_UP_COMMAND           = "user_sign_up_command"
+	USER_ADDRESS_REFRESH_COMMAND   = "user_address_refresh_command"
+	USER_ORDER_REFRESH_COMMAND     = "user_order_refresh_command"
 	CONTENT_TP_UPDATE_COMMAND      = "content_tp_update_command"
 )

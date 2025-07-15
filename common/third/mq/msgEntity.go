@@ -75,6 +75,7 @@ type UserAction struct {
 	MId    int64  `json:"mId"`
 	VirtId int64  `json:"virtId"`
 	Exp    string `json:"exp"`
+	No     string `json:"no"`
 }
 type MsgContentTp struct {
 	Id      int64  `json:"id"`
