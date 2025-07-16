@@ -645,11 +645,12 @@ func (m *RedisManger) AddMapResult(data *map[string]interface{}) bool {
 	logc.Errorf(m.ctx, "AddSiteAndOptionsResult info:%+v", data)
 	return true
 }
-func (m *RedisManger) OrderPageScriptResult(start int64, end int64) (bool, interface{}) {
+
+func (m *RedisManger) PageListScriptResult(start int64, end int64) (bool, interface{}) {
 	if !m.validKey() {
 		return false, 0
 	}
-	v, err := m.R.client.Eval(context.Background(), *m.OrderPageScript(), []string{m.k}, start, end).Result()
+	v, err := m.R.client.Eval(context.Background(), *m.PageListScript(), []string{m.k}, start, end).Result()
 	if err != nil {
 		logc.Errorf(m.ctx, "OrderPageScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
@@ -657,23 +658,23 @@ func (m *RedisManger) OrderPageScriptResult(start int64, end int64) (bool, inter
 	logc.Infof(m.ctx, "OrderPageScriptResult info:%v", v)
 	return true, v
 }
-func (m *RedisManger) AddOrderScriptResult(data any, sort int64, id string, dKey string, dData string) (bool, int) {
+func (m *RedisManger) AddPageScriptResult(data any, sort int64, no string) (bool, int) {
 	if !m.validKey() {
 		return false, 0
 	}
 	d := strs.ObjToStr(data)
-	v, err := m.R.client.Eval(context.Background(), *m.addOrderScript(), []string{m.k, id, dKey}, sort, d, dData).Int()
+	v, err := m.R.client.Eval(context.Background(), *m.addPageItemScript(), []string{m.k, no}, sort, d, m.formatSec(*m.t)).Int()
 	if err != nil {
 		logc.Errorf(m.ctx, "AddOrderScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
 	return true, v
 }
-func (m *RedisManger) DelOrderScriptResult(id, dKey string) (bool, interface{}) {
+func (m *RedisManger) DelPageScriptResult(id, dKey string) (bool, interface{}) {
 	if !m.validKey() {
 		return false, 0
 	}
-	v, err := m.R.client.Eval(context.Background(), *m.delOrderScript(), []string{m.k, dKey}, id).Result()
+	v, err := m.R.client.Eval(context.Background(), *m.delPageItemScript(), []string{m.k, dKey}, id).Result()
 	if err != nil {
 		logx.Errorf("DelOrderScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0

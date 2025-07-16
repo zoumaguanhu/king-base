@@ -80,6 +80,7 @@ type OrderContent struct {
 	VirtId       int64     `json:"virtId"`
 	CartStep     int64     `json:"cartStep"`  //阶段参数
 	OrderStep    int64     `json:"orderStep"` //阶段参数
+	CouponSn     string    `json:"couponSn"`
 }
 type PayToolInfo struct {
 	ClientId   string `json:"clientId"`

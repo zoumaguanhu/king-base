@@ -500,57 +500,56 @@ func (m *RedisManger) checkReStoreScript() *string {
 	`
 	return &script
 }
-func (m *RedisManger) OrderPageScript() *string {
+
+func (m *RedisManger) PageListScript() *string {
 	script := `-- 获取总数量
 		local k = KEYS[1]
 		local k1= k .. '_set'
 		local k2= k .. '_hash'
 		local total = redis.call('ZCARD',k1)
 		-- 获取分页的订单号列表
-		local orderNos = redis.call('ZREVRANGE', k1, ARGV[1], ARGV[2])
+		local nos = redis.call('ZREVRANGE', k1, ARGV[1], ARGV[2])
 	
 		-- 批量获取订单列表
-		local orders = redis.call('HMGET',k2, unpack(orderNos))
+		local data = redis.call('HMGET',k2, unpack(nos))
 		
-		return {total, orders} `
+		return {total, data} `
 	return &script
 }
-func (m *RedisManger) addOrderScript() *string {
+func (m *RedisManger) addPageItemScript() *string {
 	script := `
 	local k = KEYS[1]
-	local orderNo = KEYS[2]
+	local no = KEYS[2]
 	
 	local k1 = k .. '_hash' 
-	local k2 = k .. '_set' 
-	local k3 = KEYS[3]
+	local k2 = k .. '_set'
 	
 	local sortScore = ARGV[1]
-	local orderData = ARGV[2]
-	local detailData = ARGV[3]
+	local data = ARGV[2]
+	local exp = tonumber(ARGV[3])
+
 	
 	-- 更新Hash
-	redis.call('HSET', k1, orderNo, orderData)
+	redis.call('HSET', k1, no, data)
+	redis.call('EXPIRE', k1, exp)
+
 	
 	-- 更新ZSet索引
-	redis.call('ZADD', k2, sortScore, orderNo)
-
-	-- 更新详情
-	redis.call('SET', k3, detailData)
+	redis.call('ZADD', k2, sortScore, no)
+	redis.call('EXPIRE', k2, exp)	
 	
 	return 1
 	`
 	return &script
 }
-func (m *RedisManger) delOrderScript() *string {
+func (m *RedisManger) delPageItemScript() *string {
 	script := `
 	local k = KEYS[1]
 	local k1 = k .. '_hash'
 	local k2 = k .. '_set'
 	local zsetResult = redis.call('ZREM', k2, ARGV[1])
    	local hashResult = redis.call('HDEL', k1, ARGV[1])
-   	local detaulResult = redis.call('DEL', KEYS[2])
-    
- 
-    return {zsetResult, hashResult,detaulResult}`
+
+    return {zsetResult, hashResult}`
 	return &script
 }

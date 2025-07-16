@@ -94,6 +94,16 @@ func ConvertUsd2Float(num int64) float64 {
 	}
 	return ft
 }
+func ConvertStr2Float(str string) float64 {
+	result, err := strconv.ParseFloat(str, 64)
+	if err != nil {
+		return 0
+	}
+	return result
+}
+func ConvertFloat2Str(str float64) string {
+	return fmt.Sprintf("%.2f", str)
+}
 func StrToInt64Slice(s string, sp string) ([]int64, error) {
 	parts := strings.Split(s, sp)
 	result := make([]int64, 0, len(parts))

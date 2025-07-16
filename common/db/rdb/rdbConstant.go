@@ -54,6 +54,10 @@ const (
 	CART_TEMP_KEY         = "site:vsite:%v:member:%v:cart:%v"
 )
 const (
+	COUPONE_PAGE_KEY_PREFIX = "site:vsite:%v:member:%v:coupon:page:coupon"
+	COUPONE_PAGE_KEY        = "site:vsite:%v:member:%v:coupon:page:coupon_hash"
+)
+const (
 	COUNTRY_LIST_INFO = "site:vsite:common:country"
 )
 const (
