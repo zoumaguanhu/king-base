@@ -130,10 +130,10 @@ func (p *NsqProducer) Stop() {
 
 type NsqHandler struct {
 	ctx    context.Context
-	handle func(ctx context.Context, message []byte) error
+	handle func(ctx context.Context, msg *nsq.Message) error
 }
 
-func NewNsqHandler(handle func(ctx context.Context, message []byte) error) *NsqHandler {
+func NewNsqHandler(handle func(ctx context.Context, msg *nsq.Message) error) *NsqHandler {
 
 	return &NsqHandler{
 		handle: handle,
@@ -153,7 +153,7 @@ func (h *NsqHandler) HandleMessage(msg *nsq.Message) error {
 	ctx := logx.WithFields(context.Background(), logx.Field(constants.TRACE_ID, ms.Header.MsgId))
 	h.ctx = ctx
 	//msg.DisableAutoResponse()
-	if err := h.handle(h.ctx, msg.Body); err != nil {
+	if err := h.handle(h.ctx, msg); err != nil {
 		logx.WithContext(h.ctx).Errorf("Message processing failed: %v", err)
 		return err // 返回错误会触发NSQ的自动重试
 	}
@@ -185,7 +185,7 @@ func (c *NsqConsumerWrapper) Start(c1 *NsqConfig) {
 
 }
 
-func (c *NsqConsumerWrapper) NewNsqConsumer(chl string, handler func(ctx context.Context, message []byte) error) (*NsqConsumer, error) {
+func (c *NsqConsumerWrapper) NewNsqConsumer(chl string, handler func(ctx context.Context, msg *nsq.Message) error) (*NsqConsumer, error) {
 	for _, topic := range c.config.Topics {
 		for _, channel := range topic.Channels {
 			if channel != chl {

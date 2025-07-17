@@ -550,6 +550,17 @@ func (m *RedisManger) delPageItemScript() *string {
 	local zsetResult = redis.call('ZREM', k2, ARGV[1])
    	local hashResult = redis.call('HDEL', k1, ARGV[1])
 
-    return {zsetResult, hashResult}`
+    return 1`
+	return &script
+}
+func (m *RedisManger) clearPageScript() *string {
+	script := `
+	local k = KEYS[1]
+	local k1 = k .. '_hash'
+	local k2 = k .. '_set'
+	local zsetResult = redis.call('DEL', k2)
+   	local hashResult = redis.call('DEL', k1)
+
+    return 1`
 	return &script
 }

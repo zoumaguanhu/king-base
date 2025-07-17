@@ -29,6 +29,7 @@ const (
 	PRODUCT_REVIEW_KEY    = "site:vsite:%v:product:detail:%v:product_review"
 	PRODUCT_STORE_KEY     = "site:vsite:%v:product:store:%v:%v:product_store"
 	CARK_HASH_KEY         = "site:vsite:%v:member:%v:cart:cart_hash"
+	ADDRESS_PREFIX_KEY    = "site:vsite:%v:member:%v:address:address"
 	ADDRESS_HASH_KEY      = "site:vsite:%v:member:%v:address:address_hash"
 	PRODUCT_STORE_OPTIONE = "%v_%v"
 	BLOG_PAGE_HASH_KEY    = "site:vsite:%v:blog:page:blog_hash"

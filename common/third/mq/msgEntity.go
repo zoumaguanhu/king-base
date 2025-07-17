@@ -72,10 +72,11 @@ type CartInfo struct {
 }
 
 type UserAction struct {
-	MId    int64  `json:"mId"`
-	VirtId int64  `json:"virtId"`
-	Exp    string `json:"exp"`
-	No     string `json:"no"`
+	MId      int64  `json:"mId"`
+	VirtId   int64  `json:"virtId"`
+	Exp      string `json:"exp"`
+	No       string `json:"no"`
+	ClearFlg bool   `json:"clearFlg"`
 }
 type MsgContentTp struct {
 	Id      int64  `json:"id"`
@@ -113,4 +114,7 @@ type MsgOrder struct {
 type MsgBatchRemoveCart struct {
 	OrderNo string `json:"OrderNo"`
 	VirtId  int64  `json:"VirtId"`
+}
+type MsgOrderBase struct {
+	OrderNo string `json:"OrderNo"`
 }

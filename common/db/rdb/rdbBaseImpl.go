@@ -328,10 +328,10 @@ func (m *RedisManger) ZCountResult() (int, bool) {
 	}
 	v, err := m.R.client.Eval(context.Background(), *m.zSetCountScript(), []string{m.k}).Int()
 	if err != nil {
-		logc.Errorf(m.ctx, "StatIncr key:%v,field:%v, err:%v", m.k, m.f, err)
+		logc.Errorf(m.ctx, "ZCountResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return 0, false
 	}
-	logc.Infof(m.ctx, "StatScriptExpResult info:%v", v)
+	logc.Infof(m.ctx, "ZCountResult info:%v", v)
 	return v, true
 }
 func (m *RedisManger) KeyReName(newKey string) bool {
@@ -355,7 +355,7 @@ func (m *RedisManger) KeyReNameNx(newKey string) bool {
 		logc.Errorf(m.ctx, "KeyReName key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false
 	}
-	logc.Infof(m.ctx, "KeyReName info:%v", v)
+	logc.Infof(m.ctx, "KeyReNameNx info:%v", v)
 	return v
 }
 func (m *RedisManger) RunScriptResult(script string) interface{} {
@@ -368,10 +368,10 @@ func (m *RedisManger) StatHScriptResult() bool {
 	}
 	v, err := m.R.client.Eval(context.Background(), *m.incrHScript(), []string{m.k}, m.f, 1, m.formatSec(*m.t)).Int()
 	if err != nil {
-		logc.Errorf(m.ctx, "StatIncr key:%v,field:%v, err:%v", m.k, m.f, err)
+		logc.Errorf(m.ctx, "StatHScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false
 	}
-	logc.Infof(m.ctx, "StatScriptExpResult info:%v", v)
+	logc.Infof(m.ctx, "StatHScriptResult info:%v", v)
 	return true
 }
 func (m *RedisManger) StatScriptResult() (bool, int) {
@@ -380,10 +380,10 @@ func (m *RedisManger) StatScriptResult() (bool, int) {
 	}
 	v, err := m.R.client.Eval(context.Background(), *m.incrScript(), []string{m.k}, m.formatSec(*m.t), m.step).Int()
 	if err != nil {
-		logc.Errorf(m.ctx, "StatIncr key:%v,field:%v, err:%v", m.k, m.f, err)
+		logc.Errorf(m.ctx, "StatScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
-	logc.Infof(m.ctx, "StatScriptExpResult info:%v", v)
+	logc.Infof(m.ctx, "StatScriptResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) ProductPageScriptResult(start int64, end int64) (bool, interface{}) {
@@ -425,10 +425,10 @@ func (m *RedisManger) StockProductScriptResult(keys *[]string, stocks *[]string)
 func (m *RedisManger) CheckStockProductScriptResult(keys *[]string, stocks *[]string) (bool, interface{}) {
 	v, err := m.R.client.Eval(context.Background(), *m.checkReStoreScript(), *keys, *stocks).Result()
 	if err != nil {
-		logc.Errorf(m.ctx, "StockProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		logc.Errorf(m.ctx, "CheckStockProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
-	logc.Infof(m.ctx, "StockProductScriptResult info:%v", v)
+	logc.Infof(m.ctx, "CheckStockProductScriptResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) AddProductScriptResult(data any, sort int64, id string, dKey string, dData string) (bool, int) {
@@ -452,7 +452,7 @@ func (m *RedisManger) DelProductScriptResult(id, dKey string) (bool, interface{}
 		logx.Errorf("DelProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
-	logc.Errorf(m.ctx, "DelProductScriptResult info:%v", v)
+	logc.Infof(m.ctx, "DelProductScriptResult info:%v", v)
 	return true, v
 }
 
@@ -465,7 +465,7 @@ func (m *RedisManger) AddBannerScriptResult(id string, sort int64, data string) 
 		logx.Errorf("AddBannerScriptResult key:%v,sort:%v,value:%v, err:%v", m.k, sort, data, err)
 		return false
 	}
-	logc.Errorf(m.ctx, "AddBannerScriptResult info:%v", v)
+	logc.Infof(m.ctx, "AddBannerScriptResult info:%v", v)
 	return v > 0
 }
 func (m *RedisManger) BannerListScriptResult() (bool, interface{}) {
@@ -477,7 +477,7 @@ func (m *RedisManger) BannerListScriptResult() (bool, interface{}) {
 		logx.Errorf("BannerListScriptResult key:%v, err:%v", m.k, err)
 		return false, 0
 	}
-	logc.Errorf(m.ctx, "BannerListScriptResult info:%v", v)
+	logc.Infof(m.ctx, "BannerListScriptResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) DelBannerScriptResult(id int64) bool {
@@ -489,7 +489,7 @@ func (m *RedisManger) DelBannerScriptResult(id int64) bool {
 		logx.Errorf("DelBannerScriptResult key:%v,sort:%v err:%v", m.k, id, err)
 		return false
 	}
-	logc.Errorf(m.ctx, "DelBannerScriptResult info:%v", v)
+	logc.Infof(m.ctx, "DelBannerScriptResult info:%v", v)
 	return v > 0
 }
 func (m *RedisManger) HAllQResult() *map[string]string {
@@ -524,10 +524,10 @@ func (m *RedisManger) ReNameCartPageScriptResult(start int64, end int64) (bool, 
 	}
 	v, err := m.R.client.Eval(context.Background(), *m.ReNameCartPageScript(), []string{m.k}, start, end).Result()
 	if err != nil {
-		logc.Errorf(m.ctx, "CartPageScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		logc.Errorf(m.ctx, "ReNameCartPageScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
-	logc.Infof(m.ctx, "CartPageScriptResult info:%v", v)
+	logc.Infof(m.ctx, "ReNameCartPageScriptResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) AddCartScriptResult(data any, sort int64, combId string) (bool, int) {
@@ -540,7 +540,7 @@ func (m *RedisManger) AddCartScriptResult(data any, sort int64, combId string) (
 		logc.Errorf(m.ctx, "AddCartScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
-	logc.Errorf(m.ctx, "AddCartScriptResult info:%v", v)
+	logc.Infof(m.ctx, "AddCartScriptResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) DelCartScriptResult(combId string) (bool, interface{}) {
@@ -549,10 +549,10 @@ func (m *RedisManger) DelCartScriptResult(combId string) (bool, interface{}) {
 	}
 	v, err := m.R.client.Eval(context.Background(), *m.delCartScript(), []string{m.k}, combId).Result()
 	if err != nil {
-		logx.Errorf("DelProductScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		logx.Errorf("DelCartScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
-	logc.Errorf(m.ctx, "DelProductScriptResult info:%v", v)
+	logc.Infof(m.ctx, "DelCartScriptResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) DelUserCartScriptResult() (bool, interface{}) {
@@ -564,7 +564,7 @@ func (m *RedisManger) DelUserCartScriptResult() (bool, interface{}) {
 		logx.Errorf("DelUserCartScriptResult key:%v, err:%v", m.k, err)
 		return false, 0
 	}
-	logc.Errorf(m.ctx, "DelUserCartScriptResult info:%v", v)
+	logc.Infof(m.ctx, "DelUserCartScriptResult info:%v", v)
 	return true, v
 }
 
@@ -580,7 +580,7 @@ func (m *RedisManger) AddBlogScriptResult(id string, detailKey string, sort int6
 		logx.Errorf("AddBlogScriptResult key:%v,sort:%v,value:%v, err:%v", m.k, sort, data, err)
 		return false
 	}
-	logc.Errorf(m.ctx, "AddBlogScriptResult info:%v", v)
+	logc.Infof(m.ctx, "AddBlogScriptResult info:%v", v)
 	return v > 0
 }
 
@@ -614,10 +614,10 @@ func (m *RedisManger) ReCartKeyNameToOrderName() bool {
 	}
 	v, err := m.R.client.Eval(context.Background(), *m.reCartNameScript(), []string{m.k}).Int()
 	if err != nil {
-		logx.Errorf("DelBlogScriptResult key:%v, err:%v", m.k, err)
+		logx.Errorf("ReCartKeyNameToOrderName key:%v, err:%v", m.k, err)
 		return false
 	}
-	logc.Errorf(m.ctx, "DelBlogScriptResult info:%v", v)
+	logc.Errorf(m.ctx, "ReCartKeyNameToOrderName info:%v", v)
 	return v > 0
 }
 func (m *RedisManger) AddAddressResult(data *map[string]interface{}) bool {
@@ -639,10 +639,10 @@ func (m *RedisManger) AddMapResult(data *map[string]interface{}) bool {
 	args = append(args, m.formatSec(*m.t))
 	cmd := m.R.client.Eval(context.Background(), *m.hMSetExpScript(), []string{m.k}, args...)
 	if cmd.Err() != nil {
-		logc.Errorf(m.ctx, "AddSiteAndOptionsResult key:%v,field:%v, err:%v", m.k, m.f, cmd.Err())
+		logc.Errorf(m.ctx, "AddMapResult key:%v,field:%v, err:%v", m.k, m.f, cmd.Err())
 		return false
 	}
-	logc.Errorf(m.ctx, "AddSiteAndOptionsResult info:%+v", data)
+	logc.Errorf(m.ctx, "AddMapResult info:%+v", data)
 	return true
 }
 
@@ -652,10 +652,10 @@ func (m *RedisManger) PageListScriptResult(start int64, end int64) (bool, interf
 	}
 	v, err := m.R.client.Eval(context.Background(), *m.PageListScript(), []string{m.k}, start, end).Result()
 	if err != nil {
-		logc.Errorf(m.ctx, "OrderPageScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		logc.Errorf(m.ctx, "PageListScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
-	logc.Infof(m.ctx, "OrderPageScriptResult info:%v", v)
+	logc.Infof(m.ctx, "PageListScriptResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) AddPageScriptResult(data any, sort int64, no string) (bool, int) {
@@ -665,20 +665,32 @@ func (m *RedisManger) AddPageScriptResult(data any, sort int64, no string) (bool
 	d := strs.ObjToStr(data)
 	v, err := m.R.client.Eval(context.Background(), *m.addPageItemScript(), []string{m.k, no}, sort, d, m.formatSec(*m.t)).Int()
 	if err != nil {
-		logc.Errorf(m.ctx, "AddOrderScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		logc.Errorf(m.ctx, "AddPageScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
 	return true, v
 }
-func (m *RedisManger) DelPageScriptResult(id, dKey string) (bool, interface{}) {
+func (m *RedisManger) DelPageScriptResult(no string) (bool, interface{}) {
 	if !m.validKey() {
 		return false, 0
 	}
-	v, err := m.R.client.Eval(context.Background(), *m.delPageItemScript(), []string{m.k, dKey}, id).Result()
+	v, err := m.R.client.Eval(context.Background(), *m.delPageItemScript(), []string{m.k}, no).Int()
 	if err != nil {
-		logx.Errorf("DelOrderScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		logx.Errorf("DelPageScriptResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
 	}
-	logc.Errorf(m.ctx, "DelOrderScriptResult info:%v", v)
+	logc.Infof(m.ctx, "DelPageScriptResult info:%v", v)
+	return true, v
+}
+func (m *RedisManger) ClearPageScriptResult() (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.clearPageScript(), []string{m.k}).Result()
+	if err != nil {
+		logx.Errorf("ClearPageScriptResult key:%v, err:%v", m.k, err)
+		return false, 0
+	}
+	logc.Infof(m.ctx, "ClearPageScriptResult info:%v", v)
 	return true, v
 }
