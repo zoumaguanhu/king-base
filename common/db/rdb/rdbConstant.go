@@ -59,7 +59,10 @@ const (
 	COUPONE_PAGE_KEY        = "site:vsite:%v:member:%v:coupon:page:coupon_hash"
 )
 const (
-	COUNTRY_LIST_INFO = "site:vsite:common:country"
+	COUNTRY_LIST_HASH = "site:vsite:common:country:country_hash"
+	COUNTRY_LIST_INFO = "site:vsite:common:country:country_info"
+	PAY_METHOD_HASH   = "site:vsite:common:pay_method:pay_hash"
+	PAY_METHOD_INFO   = "site:vsite:common:pay_method:pay_info"
 )
 const (
 	STAT_PV      = "pv"

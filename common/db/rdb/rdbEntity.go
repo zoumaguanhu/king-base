@@ -93,6 +93,14 @@ type PayToolSimpleInfo struct {
 	PayChannel string `json:"payChannel"`
 }
 type CountryInfo struct {
-	Id   int64  `json:"Id"`
-	Name string `json:"Name"`
+	Id   int64  `json:"id"`
+	Name string `json:"name"`
+	Code string `json:"code"`
+}
+type PayMethod struct {
+	Id        int64  `json:"id"`
+	Name      string `json:"name"`
+	PrefixLab string `json:"prefixLab"`
+	SuffixLab string `json:"suffixLab"`
+	Ratio     string `json:"ratio"`
 }

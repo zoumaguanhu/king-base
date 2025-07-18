@@ -139,3 +139,8 @@ type HeaderOption struct {
 	AcCode     string `json:"acCode"`
 	InviteCode string `json:"inviteCode"`
 }
+
+const (
+	REFRESH_CONTURY    = "refresh_country"
+	REFRESH_PAY_METHOD = "refresh_pay_method"
+)

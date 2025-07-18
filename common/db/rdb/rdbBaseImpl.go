@@ -636,7 +636,11 @@ func (m *RedisManger) AddMapResult(data *map[string]interface{}) bool {
 	}
 
 	// 添加过期时间参数
-	args = append(args, m.formatSec(*m.t))
+	if m.t == nil {
+		t := time.Duration(0) * time.Second
+		m.t = &t
+		args = append(args, m.formatSec(*m.t))
+	}
 	cmd := m.R.client.Eval(context.Background(), *m.hMSetExpScript(), []string{m.k}, args...)
 	if cmd.Err() != nil {
 		logc.Errorf(m.ctx, "AddMapResult key:%v,field:%v, err:%v", m.k, m.f, cmd.Err())
