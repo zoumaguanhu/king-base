@@ -23,15 +23,18 @@ const (
 // bz类型
 
 const (
-	PRODUCT_BZ     = "product_bz"
-	SITE_BZ        = "site_bz"
-	BANNER_BZ      = "banner_bz"
-	SYS_BZ         = "sys_bz"
-	COUPONE_BZ     = "coupon_bz"
-	CART_BZ        = "cart_bz"
-	USER_ACTION_BZ = "user_action_bz"
-	CONTENT_TP_BZ  = "content_tp_bz"
-	ORDER_BZ       = "order_bz"
+	PRODUCT_BZ          = "product_bz"
+	SITE_BZ             = "site_bz"
+	BANNER_BZ           = "banner_bz"
+	SYS_BZ              = "sys_bz"
+	COUPONE_BZ          = "coupon_bz"
+	CART_BZ             = "cart_bz"
+	USER_ACTION_BZ      = "user_action_bz"
+	USER_ADD_ACTION_BZ  = "user_add_action_bz"
+	USER_EDIT_ACTION_BZ = "user_edit_action_bz"
+	USER_DEL_ACTION_BZ  = "user_del_action_bz"
+	CONTENT_TP_BZ       = "content_tp_bz"
+	ORDER_BZ            = "order_bz"
 )
 
 // CommandType类型
@@ -61,6 +64,8 @@ const (
 	USER_ADDRESS_REFRESH_COMMAND      = "user_address_refresh_command"
 	USER_CART_REFRESH_COMMAND         = "user_cart_refresh_command"
 	USER_ORDER_REFRESH_COMMAND        = "user_order_refresh_command"
+	USER_INFO_UPDATE_COMMAND          = "user_info_update_command"
+	USER_ADDRESS_UPDATE_COMMAND       = "user_address_update_command"
 	USER_ORDER_DETAIL_REFRESH_COMMAND = "user_order_detail_refresh_command"
 	USER_COUPON_REFRESH_COMMAND       = "user_coupon_refresh_command"
 	CONTENT_TP_UPDATE_COMMAND         = "content_tp_update_command"

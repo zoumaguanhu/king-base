@@ -77,6 +77,7 @@ type UserAction struct {
 	Exp      string `json:"exp"`
 	No       string `json:"no"`
 	ClearFlg bool   `json:"clearFlg"`
+	Content  string `json:"content"`
 }
 type MsgContentTp struct {
 	Id      int64  `json:"id"`
