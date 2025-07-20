@@ -63,6 +63,7 @@ const (
 	COUNTRY_LIST_INFO = "site:vsite:common:country:country_info"
 	PAY_METHOD_HASH   = "site:vsite:common:pay_method:pay_hash"
 	PAY_METHOD_INFO   = "site:vsite:common:pay_method:pay_info"
+	LOCATION_API_INFO = "site:vsite:common:location_api:location_info"
 )
 const (
 	STAT_PV      = "pv"

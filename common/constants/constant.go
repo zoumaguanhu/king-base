@@ -106,6 +106,9 @@ const (
 	SET_PROVIDED_ADDRESS       string = "SET_PROVIDED_ADDRESS"
 	PAY_NOW                    string = "PAY_NOW"
 	ORDER_EXPIRE               int64  = 3
+	DIGITAL_GOODS              string = "DIGITAL_GOODS"
+	PHYSICAL_GOODS             string = "PHYSICAL_GOODS"
+	DONATION                   string = "DONATION"
 )
 
 const (
@@ -141,6 +144,7 @@ type HeaderOption struct {
 }
 
 const (
-	REFRESH_CONTURY    = "refresh_country"
-	REFRESH_PAY_METHOD = "refresh_pay_method"
+	REFRESH_CONTURY      = "refresh_country"
+	REFRESH_PAY_METHOD   = "refresh_pay_method"
+	REFRESH_LOCATION_API = "refresh_location_api"
 )
