@@ -6,8 +6,10 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"king.com/king/base/common/arrs"
 	"king.com/king/base/common/constants"
+	"math"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 // EmptyStr 空值
@@ -101,8 +103,27 @@ func ConvertStr2Float(str string) float64 {
 	}
 	return result
 }
-func ConvertFloat2Str(str float64) string {
-	return fmt.Sprintf("%.2f", str)
+func ConvertFloat2Str(num float64) string {
+
+	return strconv.FormatFloat(num, 'f', 2, 64)
+}
+func ConvertCDFloat2Str(num float64, fraction int) string {
+	if fraction <= 0 {
+		return strconv.FormatFloat(math.Round(num), 'f', 0, 64)
+	}
+
+	pow := math.Pow10(fraction)
+	rounded := math.Round(num*pow) / pow
+
+	return strconv.FormatFloat(rounded, 'f', fraction, 64)
+}
+func ConvertCDFloat2StrWithRatio(num float64, ratio string, fraction int) string {
+	rt := ConvertStr2Float(ratio)
+	pc := num * rt
+	return ConvertCDFloat2Str(pc, fraction)
+}
+func ConvertCurrency(str string, ratio string, fraction int) string {
+	return ConvertCDFloat2StrWithRatio(ConvertStr2Float(str), ratio, fraction)
 }
 func StrToInt64Slice(s string, sp string) ([]int64, error) {
 	parts := strings.Split(s, sp)
@@ -204,4 +225,14 @@ func StrToFloat64(s string) float64 {
 		logx.Errorf("StrToFloat64 s:%v err:%v", s, err)
 	}
 	return f64
+}
+func SubStr(s string, maxLen int) string {
+
+	if utf8.RuneCountInString(s) <= maxLen {
+		return s
+	}
+
+	// 将字符串转换为rune切片
+	runes := []rune(s)
+	return string(runes[:maxLen])
 }
