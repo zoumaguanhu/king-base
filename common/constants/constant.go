@@ -93,13 +93,13 @@ const (
 )
 
 const (
-	PAYPAL                     string = "PayPal"
-	PAYPAI_GRANT_TYPE          string = "grant_type"
-	PAYPAI_CLIENT_CREDENTIALS  string = "client_credentials"
-	PAYPAL_REQUEST_ID          string = "PayPal-Request-Id"
-	REF_PAYER_ACTION           string = "payer-action"
-	USD                        string = "USD"
-	DOLLAR                     string = "$"
+	PAYPAL                    string = "PayPal"
+	PAYPAI_GRANT_TYPE         string = "grant_type"
+	PAYPAI_CLIENT_CREDENTIALS string = "client_credentials"
+	PAYPAL_REQUEST_ID         string = "PayPal-Request-Id"
+	REF_PAYER_ACTION          string = "payer-action"
+	//USD                        string = "USD"
+	//DOLLAR                     string = "$"
 	EN_US                      string = "en-US"
 	IMMEDIATE_PAYMENT_REQUIRED string = "IMMEDIATE_PAYMENT_REQUIRED"
 	LANDING_PAGE               string = "LOGIN"

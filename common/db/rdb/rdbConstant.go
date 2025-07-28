@@ -55,6 +55,9 @@ const (
 	CART_TEMP_KEY         = "site:vsite:%v:member:%v:cart:%v"
 )
 const (
+	SITE_PAY = "site:vsite:%v:payTools:%v:token"
+)
+const (
 	COUPONE_PAGE_KEY_PREFIX = "site:vsite:%v:member:%v:coupon:page:coupon"
 	COUPONE_PAGE_KEY        = "site:vsite:%v:member:%v:coupon:page:coupon_hash"
 )

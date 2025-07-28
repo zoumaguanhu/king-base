@@ -86,14 +86,24 @@ type OrderContent struct {
 	ShoppingPrice  string    `json:"shoppingPrice"`
 	HandlingPrice  string    `json:"handlingPrice"`
 	TaxPrice       string    `json:"taxPrice"`
+	CurrencyID     int64     `json:"currencyID"`
 	PrefixLab      string    `json:"prefixLab"`
 	SuffixLab      string    `json:"suffixLab"`
 	CouponDiscount string    `json:"couponDiscount"`
+	Ratio          string    `json:"ratio"`
+	Fraction       int64     `json:"fraction"`
+}
+type SiteOption struct {
+	ItemKey  string `json:"itemKey"`
+	ItemVal  string `json:"itemVal"`
+	ItemType int64  `json:"itemType"`
+	Status   int64  `json:"status"`
 }
 type PayToolInfo struct {
 	ClientId   string `json:"clientId"`
 	SecretKey  string `json:"secretKey"`
 	PayChannel string `json:"payChannel"`
+	Status     int64  `json:"status"`
 }
 type PayToolSimpleInfo struct {
 	ClientId   string `json:"clientId"`
@@ -111,4 +121,8 @@ type PayMethod struct {
 	SuffixLab string `json:"suffixLab"`
 	Ratio     string `json:"ratio"`
 	Fraction  int    `json:"fraction"`
+}
+type PayTool struct {
+	Token string `json:"token"`
+	Exp   string `json:"exp"`
 }
