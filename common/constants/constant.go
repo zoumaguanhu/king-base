@@ -148,4 +148,5 @@ const (
 	REFRESH_CONTURY      = "refresh_country"
 	REFRESH_PAY_METHOD   = "refresh_pay_method"
 	REFRESH_LOCATION_API = "refresh_location_api"
+	REFRESH_SHOPPING_API = "refresh_shopping_api"
 )
