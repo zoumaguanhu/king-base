@@ -639,8 +639,8 @@ func (m *RedisManger) AddMapResult(data *map[string]interface{}) bool {
 	if m.t == nil {
 		t := time.Duration(0) * time.Second
 		m.t = &t
-		args = append(args, m.formatSec(*m.t))
 	}
+	args = append(args, m.formatSec(*m.t))
 	cmd := m.R.client.Eval(context.Background(), *m.hMSetExpScript(), []string{m.k}, args...)
 	if cmd.Err() != nil {
 		logc.Errorf(m.ctx, "AddMapResult key:%v,field:%v, err:%v", m.k, m.f, cmd.Err())
@@ -660,6 +660,22 @@ func (m *RedisManger) PageListScriptResult(start int64, end int64) (bool, interf
 		return false, 0
 	}
 	logc.Infof(m.ctx, "PageListScriptResult info:%v", v)
+	return true, v
+}
+func (m *RedisManger) ListScriptByFdsResult(fds *[]string) (bool, interface{}) {
+	if !m.validKey() {
+		return false, 0
+	}
+	if len(*fds) <= 0 {
+		logc.Errorf(m.ctx, "ListScriptByFdsResult key:%v,fds is empty !!!", m.k)
+		return false, nil
+	}
+	v, err := m.R.client.Eval(context.Background(), *m.ListByFdsScript(), []string{m.k}, *fds).Result()
+	if err != nil {
+		logc.Errorf(m.ctx, "ListScriptByFdsResult key:%v,field:%v, err:%v", m.k, m.f, err)
+		return false, 0
+	}
+	logc.Infof(m.ctx, "ListScriptByFdsResult info:%v", v)
 	return true, v
 }
 func (m *RedisManger) AddPageScriptResult(data any, sort int64, no string) (bool, int) {

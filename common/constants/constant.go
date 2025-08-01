@@ -150,3 +150,8 @@ const (
 	REFRESH_LOCATION_API = "refresh_location_api"
 	REFRESH_SHOPPING_API = "refresh_shopping_api"
 )
+
+const (
+	COMMON_PAY_METHOD   = "pay_method"
+	COMMON_COUNTRY_LIST = "country_list"
+)

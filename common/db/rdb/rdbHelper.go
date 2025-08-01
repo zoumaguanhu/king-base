@@ -516,6 +516,18 @@ func (m *RedisManger) PageListScript() *string {
 		return {total, data} `
 	return &script
 }
+func (m *RedisManger) ListByFdsScript() *string {
+	script := `
+		-- 批量获取列表
+		local data
+        if ARGV[1] and #ARGV[1] > 0 then
+            data = redis.call('HMGET', KEYS[1], unpack(ARGV[1]))
+        else
+            data = redis.call('HGETALL', KEYS[1])
+        end
+        return data `
+	return &script
+}
 func (m *RedisManger) addPageItemScript() *string {
 	script := `
 	local k = KEYS[1]
