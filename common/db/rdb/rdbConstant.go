@@ -41,7 +41,7 @@ const (
 const (
 	STAT_FIELD_XCODE   = "platform:%v:bz:%v:xCode:%v"
 	STAT_FIELDE        = "platform:%v:bz:%v"
-	SITE_OPTIONS       = "site:vsite:%v"
+	SITE_INFO_KEY      = "site:vsite:%v:v_site_info"
 	SITE_OPTIONS_FIELD = "option_%v"
 	HOST_STAT_SUFFIX   = "bz:%v:date:%v"
 )
@@ -85,7 +85,7 @@ const (
 const (
 	STAT_EXP_TIME             = time.Duration(604800 * time.Second) // 7 * 24 * 60 * 60
 	DANGER_CLIENT_LIMIT       = 6
-	DANGER_ADMIN_LIMIT        = 8
+	DANGER_ADMIN_LIMIT        = 10
 	ADMIN_TRY_COUNT_LIMIT int = 5
 )
 
