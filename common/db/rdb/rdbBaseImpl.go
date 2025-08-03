@@ -662,7 +662,7 @@ func (m *RedisManger) PageListScriptResult(start int64, end int64) (bool, interf
 	logc.Infof(m.ctx, "PageListScriptResult info:%v", v)
 	return true, v
 }
-func (m *RedisManger) ListScriptByFdsResult(fds *[]string) (bool, interface{}) {
+func (m *RedisManger) ListScriptByFdsResult(fds *[]interface{}) (bool, interface{}) {
 	if !m.validKey() {
 		return false, 0
 	}
@@ -670,7 +670,7 @@ func (m *RedisManger) ListScriptByFdsResult(fds *[]string) (bool, interface{}) {
 		logc.Errorf(m.ctx, "ListScriptByFdsResult key:%v,fds is empty !!!", m.k)
 		return false, nil
 	}
-	v, err := m.R.client.Eval(context.Background(), *m.ListByFdsScript(), []string{m.k}, *fds).Result()
+	v, err := m.R.client.Eval(context.Background(), *m.ListByFdsScript(), []string{m.k}, (*fds)...).Result()
 	if err != nil {
 		logc.Errorf(m.ctx, "ListScriptByFdsResult key:%v,field:%v, err:%v", m.k, m.f, err)
 		return false, 0
