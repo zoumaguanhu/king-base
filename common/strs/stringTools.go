@@ -117,12 +117,12 @@ func ConvertCDFloat2Str(num float64, fraction int) string {
 
 	return strconv.FormatFloat(rounded, 'f', fraction, 64)
 }
-func ConvertCDFloat2StrWithRatio(num float64, ratio string, fraction int) string {
+func ConvertCDFloat2StrWithRatio(num float64, ratio string, fraction int64) string {
 	rt := ConvertStr2Float(ratio)
 	pc := num * rt
-	return ConvertCDFloat2Str(pc, fraction)
+	return ConvertCDFloat2Str(pc, int(fraction))
 }
-func ConvertCurrency(str string, ratio string, fraction int) string {
+func ConvertCurrency(str string, ratio string, fraction int64) string {
 	return ConvertCDFloat2StrWithRatio(ConvertStr2Float(str), ratio, fraction)
 }
 func StrToInt64Slice(s string, sp string) ([]int64, error) {

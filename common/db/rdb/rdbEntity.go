@@ -69,29 +69,31 @@ type ContentTpLimit struct {
 	Status       int64 `json:"status"`
 }
 type OrderContent struct {
-	OrderNo       string    `json:"orderNo"`
-	Status        int64     `json:"status"`
-	OrderType     int64     `json:"orderType"`
-	TotalPrice    string    `json:"totalPrice"`
-	RealPrice     string    `json:"realPrice"`
-	OrderTimeOut  time.Time `json:"orderTimeout"`
-	MId           int64     `json:"mId"`
-	XCode         string    `json:"xCode"`
-	Platform      string    `json:"platform"`
-	VirtId        int64     `json:"virtId"`
-	CartStep      int64     `json:"cartStep"`  //阶段参数
-	OrderStep     int64     `json:"orderStep"` //阶段参数
-	CouponSn      string    `json:"couponSn"`
-	Exp           string    `json:"exp"`
-	ShoppingPrice string    `json:"shoppingPrice"`
-	HandlingPrice string    `json:"handlingPrice"`
-	TaxPrice      string    `json:"taxPrice"`
-	CurrencyID    int64     `json:"currencyID"`
-	PrefixLab     string    `json:"prefixLab"`
-	SuffixLab     string    `json:"suffixLab"`
-	Discount      string    `json:"discount"`
-	Ratio         string    `json:"ratio"`
-	Fraction      int64     `json:"fraction"`
+	OrderNo        string    `json:"orderNo"`
+	Status         int64     `json:"status"`
+	OrderType      int64     `json:"orderType"`
+	TotalPrice     string    `json:"totalPrice"`
+	RealPrice      string    `json:"realPrice"`
+	OrderTimeOut   time.Time `json:"orderTimeout"`
+	MId            int64     `json:"mId"`
+	XCode          string    `json:"xCode"`
+	Platform       string    `json:"platform"`
+	VirtId         int64     `json:"virtId"`
+	CartStep       int64     `json:"cartStep"`  //阶段参数
+	OrderStep      int64     `json:"orderStep"` //阶段参数
+	CouponSn       string    `json:"couponSn"`
+	Exp            string    `json:"exp"`
+	ShoppingPrice  string    `json:"shoppingPrice"`
+	HandlingPrice  string    `json:"handlingPrice"`
+	TaxPrice       string    `json:"taxPrice"`
+	InsurancePrice string    `json:"insurancePrice"`
+	FeePrice       string    `json:"feePrice"`
+	CurrencyID     int64     `json:"currencyID"`
+	PrefixLab      string    `json:"prefixLab"`
+	SuffixLab      string    `json:"suffixLab"`
+	Discount       string    `json:"discount"`
+	Ratio          string    `json:"ratio"`
+	Fraction       int64     `json:"fraction"`
 }
 type SiteOption struct {
 	ItemKey  string `json:"itemKey"`
@@ -120,7 +122,7 @@ type PayMethod struct {
 	PrefixLab string `json:"prefixLab"`
 	SuffixLab string `json:"suffixLab"`
 	Ratio     string `json:"ratio"`
-	Fraction  int    `json:"fraction"`
+	Fraction  int64  `json:"fraction"`
 }
 type PayTool struct {
 	Token string `json:"token"`
@@ -131,4 +133,9 @@ type Shopping struct {
 	Name string `json:"name"`
 	Url  string `json:"url"`
 	Desc string `json:"desc"`
+}
+type FeeInfo struct {
+	FeeType   string `json:"feeType"`
+	FeeVal    string `json:"feeVal"`
+	FeeOption string `json:"feeOption"`
 }

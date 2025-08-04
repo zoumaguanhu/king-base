@@ -121,6 +121,7 @@ const (
 	P_TYPE_3 int64 = 3
 	P_TYPE_4 int64 = 4
 	P_TYPE_5 int64 = 5
+	P_TYPE_6 int64 = 6
 )
 const (
 	ROLE_0 int64 = 0

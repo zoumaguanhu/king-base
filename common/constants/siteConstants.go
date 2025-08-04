@@ -23,3 +23,17 @@ const (
 	MAILE_TP int64 = 1
 	BLOG     int64 = 2
 )
+const (
+	SHOPPING_TYPE   = 5
+	TAX_TYPE        = 6
+	HANDLING_TYPE   = 7
+	INSURANCE_TYPE  = 8
+	COUNTRY_TYPE    = 9
+	PAY_METHOD_TYPE = 10
+)
+const (
+	ITEM_KEY_1 = "1"
+	ITEM_KEY_2 = "2"
+	ITEM_KEY_3 = "3"
+	ITEM_KEY_4 = "4"
+)
