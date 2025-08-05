@@ -139,3 +139,10 @@ type FeeInfo struct {
 	FeeVal    string `json:"feeVal"`
 	FeeOption string `json:"feeOption"`
 }
+type CloudflareR2 struct {
+	Url             string `json:"url"`
+	AccountId       string `json:"accountId"`
+	AccessKeyId     string `json:"accessKeyId"`
+	AccessKeySecret string `json:"accessKeySecret"`
+	PublicURL       string `json:"publicURL"`
+}

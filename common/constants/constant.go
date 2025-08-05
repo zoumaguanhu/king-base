@@ -49,6 +49,7 @@ const RD_SEPARATOR = ":"
 const DATE_366 int = 366
 const CG_FLG string = "cgFlg"
 const X_CODE = "xCode"
+const IMAGE = "image"
 
 // 双引号空
 const EMPTY_STRING = ""

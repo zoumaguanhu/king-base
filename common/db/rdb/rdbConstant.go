@@ -110,3 +110,6 @@ const (
 	USER_TRY_COUNT       string = "try_count"
 	USER_TRY_COUNT_LIMIT int    = 5
 )
+const (
+	SITE_BUCKET_NAME_PREFIX = "site%v"
+)
