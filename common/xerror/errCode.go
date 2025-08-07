@@ -19,4 +19,5 @@ const (
 	SERVER_QUERY_TOTAL_ERROR  = 200101 //查询total异常
 	SERVER_QUERY_DETAIL_ERROR = 200102 //查询detail异常
 	SERVER_UPDATE_ERROR       = 200103 //执行更新失败
+	THIRD_ERROR               = 200104 //执行更新失败
 )

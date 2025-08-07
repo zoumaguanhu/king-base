@@ -6,7 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logc"
 	"io"
 	"king.com/king/base/common/constants"
-	"king.com/king/rpc-oms/pkg/xerror"
+	"king.com/king/base/common/xerror"
 	"net/http"
 	"time"
 )
