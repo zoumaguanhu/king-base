@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"king.com/king/rpc-ums/pkg/constants"
+	"king.com/king/base/common/constants"
 	"strings"
 )
 

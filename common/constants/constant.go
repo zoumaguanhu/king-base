@@ -158,3 +158,10 @@ const (
 	COMMON_PAY_METHOD   = "pay_method"
 	COMMON_COUNTRY_LIST = "country_list"
 )
+
+// 日志后缀
+const ERROR_SUFFIX = ":%v"
+
+// 冒号
+const COLON = ":"
+const SYS = "sys"

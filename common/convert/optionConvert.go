@@ -3,7 +3,7 @@ package convert
 import (
 	"errors"
 	"github.com/jinzhu/copier"
-	"king.com/king/rpc-ums/pkg/times"
+	"king.com/king/base/common/times"
 	"time"
 )
 

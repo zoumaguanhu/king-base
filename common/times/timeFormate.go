@@ -2,13 +2,16 @@ package times
 
 import (
 	"fmt"
-	"king.com/king/rpc-ums/pkg/constants"
+	"king.com/king/base/common/constants"
 	"time"
 )
 
+// 时间格式
 const DATE_TIME string = "2006-01-02 15:04:05"
 const DATE_TIME_JOIN string = "20060102150405"
 const DATE string = "2006-01-02"
+const DATE_FORMAT = "2006-01-02"
+const TIME_FORMAT = "15:04:05"
 
 func DateTimeFormat(dateTime time.Time, format string) string {
 	if dateTime.IsZero() {
@@ -29,10 +32,10 @@ func DateFormat(date time.Time) string {
 	return DateTimeFormat(date, DATE)
 }
 func TimeToDateTime(t int64) string {
-	return TimeToFormatStr(t, constants.DATE_TIME_FORMAT)
+	return TimeToFormatStr(t, DATE_TIME)
 }
 func TimeToDate(t int64) string {
-	return TimeToFormatStr(t, constants.DATE_FORMAT)
+	return TimeToFormatStr(t, DATE_FORMAT)
 }
 
 // TimeToFormatStr 指定时间格式
