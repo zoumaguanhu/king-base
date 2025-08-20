@@ -7,13 +7,13 @@ import (
 	"path/filepath"
 )
 
-func Parse(mode string) (string, bool) {
+func Parse(mode string, p string) (string, bool) {
 	logx.Infof("current mode:%v", mode)
 	if mode != constants.PRO_MODE {
 		return constants.EMPTY_STRING, false
 	}
 	// 获取环境变量 DB_PASSWORD_FILE，默认使用 /run/secrets/db-password
-	passwordFile := os.Getenv(constants.DB_PASSWORD_FILE)
+	passwordFile := os.Getenv(p)
 
 	// 确保路径是绝对路径（可选，视需求而定）
 	absPath, err := filepath.Abs(passwordFile)

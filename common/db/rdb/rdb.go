@@ -8,6 +8,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/zeromicro/go-zero/core/logc"
 	"king.com/king/base/common/constants"
+	"king.com/king/base/common/secret"
 	"time"
 )
 
@@ -24,7 +25,11 @@ type RedisClient struct {
 	ctx    context.Context
 }
 
-func New(cnf *RdsCnf) *RedisClient {
+func New(cnf *RdsCnf, mode string) *RedisClient {
+	pass, b := secret.Parse(mode, constants.REDIS_PASSWORD_FILE)
+	if b {
+		cnf.Password = pass
+	}
 	opt := &redis.Options{
 		Addr:     cnf.Addr,
 		DB:       cnf.DB,

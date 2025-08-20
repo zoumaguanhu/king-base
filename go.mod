@@ -13,6 +13,7 @@ require (
 	github.com/nsqio/go-nsq v1.1.0
 	github.com/zeromicro/go-zero v1.8.5
 	golang.org/x/crypto v0.38.0
+	google.golang.org/grpc v1.71.0
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gorm.io/driver/postgres v1.6.0
 	gorm.io/gorm v1.30.1
