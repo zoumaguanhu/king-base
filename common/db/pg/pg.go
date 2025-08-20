@@ -29,7 +29,6 @@ func (d *Db) C(mode string) *gorm.DB {
 	pass, b := secret.Parse(mode, constants.DB_PASSWORD_FILE)
 	if b {
 		d.DbPassword = pass
-		logx.Infof("db pass:%v", pass)
 	}
 	dsn := fmt.Sprintf(d.DSN, d.DbHost, d.DbUser, d.DbPassword, d.DbName, d.DbPort)
 	conn, err := gorm.Open(
