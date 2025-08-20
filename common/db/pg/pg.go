@@ -26,7 +26,7 @@ func New(dsn string, mode string, c *gorm_pkg.GormConnPoolConf) *Db {
 	return &Db{DSN: dsn, Mode: mode, DbCPool: c}
 }
 func (d *Db) C(mode string) *gorm.DB {
-	pass, b := secret.Parse(d.Mode, constants.DB_PASSWORD_FILE)
+	pass, b := secret.Parse(mode, constants.DB_PASSWORD_FILE)
 	if b {
 		d.DbPassword = pass
 		logx.Infof("db pass:%v", pass)
