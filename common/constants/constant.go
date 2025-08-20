@@ -58,6 +58,8 @@ const PAYLOAD = "payload"
 const MD5 = "md5"
 const EXP = "exp"
 const IAT = "iat"
+const PRO_MODE = "pro"
+const DB_PASSWORD_FILE = "DB_PASSWORD_FILE"
 const (
 	PRODUCT_SKU_ERROR = 300111
 )

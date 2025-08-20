@@ -6,6 +6,8 @@ go mod tidy
 go clean -modcache
 go mod download
 
+#查看当前的remote列表
+git remote -v
 推送base代码到github仓库
 git remote add public-origin https://github.com/zoumaguanhu/king-base.git
 # 需从本地master推送代码，注意dev合并代码到master
